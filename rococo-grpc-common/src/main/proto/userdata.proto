@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package com.dboyko.rococo.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.dboyko.rococo.grpc";
+option java_outer_classname = "UserdataProto";
+
+import "google/protobuf/empty.proto";
+
+service UserDataService {
+    rpc GetUser(GetUserRequest) returns (GetUserResponse);
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+}
+
+message GetUserRequest {
+    string username = 1;
+}
+
+message GetUserResponse {
+    string userId = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    bytes avatar = 5;
+}
+
+message UpdateUserRequest {
+    string userId = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    bytes avatar = 5;
+}
+
+message UpdateUserResponse {
+    bool success = 1;
+}

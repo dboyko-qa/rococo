@@ -1,48 +1,56 @@
 plugins {
-    id 'java'
     id 'org.springframework.boot' version '3.5.6'
     id 'com.google.cloud.tools.jib' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'qa.dboyko'
+group = 'qa.boyko'
 version = '1.0.0'
 
+repositories {
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+    mavenCentral()
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += "-Dfile.encoding=UTF-8"
+}
+
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
-    implementation 'org.springframework.security:spring-security-oauth2-authorization-server'
+    implementation project(':rococo-grpc-common')
+
+    implementation("net.devh:grpc-server-spring-boot-starter:${project.ext.springGrpcVersion}") {
+        exclude group: 'io.grpc'
+        exclude group: 'com.google.protobuf'
+    }
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "com.google.protobuf:protobuf-java:${project.ext.protobufVersion}"
+    implementation "com.google.protobuf:protobuf-java-util:${project.ext.protobufVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.session:spring-session-jdbc'
+    implementation "io.grpc:grpc-netty-shaded:${project.ext.grpcVersion}"
+    implementation "io.grpc:grpc-netty:${project.ext.grpcVersion}"
+    implementation "io.grpc:grpc-services:${project.ext.grpcVersion}"
     implementation "org.springframework.kafka:spring-kafka:${project.ext.springKafkaVersion}"
     implementation "org.springframework.cloud:spring-cloud-starter-vault-config:${project.ext.springVaultVersion}"
     implementation "org.flywaydb:flyway-core:${project.ext.flywayVersion}"
     implementation "org.flywaydb:flyway-database-postgresql:${project.ext.flywayVersion}"
     annotationProcessor "org.projectlombok:lombok:${project.ext.lombokVersion}"
     compileOnly "org.projectlombok:lombok:${project.ext.lombokVersion}"
-    implementation "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
-    runtimeOnly "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
+    runtimeOnly "org.postgresql:postgresql:42.7.5"
+    implementation "org.postgresql:postgresql:42.7.5"
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "com.h2database:h2:${project.ext.h2Version}"
-}
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'}
 
 jib {
     container {
-        ports = ['9000']
+        ports = ['8091']
         jvmFlags = ["-Dspring.profiles.active=${System.env.PROFILE}"]
         environment = [
                 'VAULT_TOKEN': "${System.env.VAULT_TOKEN}".toString(),
                 'TZ'         : 'Europe/Moscow'
         ]
         creationTime = 'USE_CURRENT_TIMESTAMP'
-        labels = [
-                'maintainer': 'Dmitrii Tuchs @dtuchs',
-                'version'   : "${project.version}".toString()
-        ]
     }
     from {
         image = "${project.ext.dockerImage}"
