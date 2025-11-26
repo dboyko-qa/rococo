@@ -7,7 +7,7 @@ import jakarta.annotation.Nonnull;
 import java.util.Base64;
 
 public record UserdataJson(
-    String userId,
+    String id,
     String username,
     String firstname,
     String lastname,
@@ -37,7 +37,7 @@ public record UserdataJson(
                 userdataMessage.getUsername(),
                 userdataMessage.getFirstname(),
                 userdataMessage.getLastname(),
-                convertAvatarToString(userdataMessage.getAvatar())
+                userdataMessage.getAvatar()
         );
     }
 }

@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.protobuf.ByteString;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -72,15 +73,12 @@ public class UserDataService extends UserDataServiceGrpc.UserDataServiceImplBase
 
         if (userOpt.isPresent()) {
             UserEntity user = userOpt.get();
-            if (user.getAvatar() != null) {
-                avatar = ByteString.copyFrom(user.getAvatar());
-            }
             GetUserResponse response = GetUserResponse.newBuilder()
                     .setUserId(user.getId().toString())
                     .setUsername(user.getUsername())
                     .setFirstname(user.getFirstname() != null ? user.getFirstname() : "")
                     .setLastname(user.getLastname() != null ? user.getLastname() : "")
-                    .setAvatar(avatar)
+                    .setAvatar(user.getAvatar() != null && user.getAvatar().length > 0 ? new String(user.getAvatar(), StandardCharsets.UTF_8) : "")
                     .build();
             responseObserver.onNext(response);
         } else {
@@ -98,9 +96,9 @@ public class UserDataService extends UserDataServiceGrpc.UserDataServiceImplBase
         boolean success = false;
         if (userOpt.isPresent()) {
             UserEntity user = userOpt.get();
-            if (!request.getAvatar().isEmpty()) {
-                user.setAvatar(request.getAvatar().toByteArray());
-            }
+            user.setAvatar(!request.getAvatar().isEmpty()
+                    ? request.getAvatar().getBytes(StandardCharsets.UTF_8)
+                    : null);
             user.setUsername(request.getUsername());
             user.setFirstname(request.getFirstname());
             user.setLastname(request.getLastname());

@@ -22,7 +22,7 @@ message GetUserResponse {
     string username = 2;
     string firstname = 3;
     string lastname = 4;
-    bytes avatar = 5;
+    string avatar = 5;
 }
 
 message UpdateUserRequest {
@@ -30,7 +30,7 @@ message UpdateUserRequest {
     string username = 2;
     string firstname = 3;
     string lastname = 4;
-    bytes avatar = 5;
+    string avatar = 5;
 }
 
 message UpdateUserResponse {
