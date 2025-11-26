@@ -1,9 +1,9 @@
 server:
-  port: 8071
+  port: 8073
 
 grpc:
   server:
-    port: 8072
+    port: 8074
     max-inbound-message-size: 1MB
 
 spring:
@@ -11,7 +11,7 @@ spring:
     compatibility-verifier:
       enabled: false
   application:
-    name: rococo-userdata
+    name: rococo-artist
   datasource:
     hikari:
       connection-timeout: 20000
@@ -25,7 +25,7 @@ spring:
     baseline-on-migrate: true
     baseline-version: 0
     schemas: public
-    locations: classpath:db/migration/rococo-userdata
+    locations: classpath:db/migration/rococo-artis
   jpa:
     hibernate:
       ddl-auto: none
@@ -41,7 +41,7 @@ spring:
 
 logging:
   file:
-    path: ./logs/rococo-userdata
+    path: ./logs/rococo-artist
   level:
     root: INFO
     org.springframework.web: INFO
@@ -60,18 +60,18 @@ spring:
       - 'org.springframework.cloud.vault.config.VaultAutoConfiguration'
       - 'org.springframework.cloud.vault.config.VaultObservationAutoConfiguration'
       - 'org.springframework.cloud.vault.config.VaultReactiveAutoConfiguration'
-  kafka:
-    bootstrap-servers: 'localhost:9092'
-    consumer:
-      group-id: 'userdata'
-      auto-offset-reset: earliest
-      properties:
-        spring.json.trusted.packages: "*"
-        spring.json.value.default.type: qa.dboyko.rococo.model.UserJson
+#  kafka:
+#    bootstrap-servers: 'localhost:9092'
+#    consumer:
+#      group-id: 'artist'
+#      auto-offset-reset: earliest
+#      properties:
+#        spring.json.trusted.packages: "*"
+#        spring.json.value.default.type: qa.dboyko.rococo.model.ArtistJson
   datasource:
     username: postgres
     password: secret
-    url: 'jdbc:postgresql://localhost:5432/rococo-userdata'
+    url: 'jdbc:postgresql://localhost:5432/rococo-artist'
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 20000
@@ -93,7 +93,7 @@ spring:
   datasource:
     username: postgres
     password: secret
-    url: 'jdbc:postgresql://rococo-all-db:5432/rococo-userdata'
+    url: 'jdbc:postgresql://rococo-all-db:5432/rococo-artist'
 ---
 spring:
   config:

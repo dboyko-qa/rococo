@@ -46,6 +46,13 @@ grpc:
       keepAliveWithoutCalls: true
       netty:
         use-native-transports: false
+    grpcArtistClient:
+      address: 'static://127.0.0.1:8074'
+      negotiationType: PLAINTEXT
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      netty:
+        use-native-transports: false
 
 rococo-front:
   base-uri: 'http://127.0.0.1:3000'
@@ -72,10 +79,13 @@ grpc:
     grpcUserdataClient:
       address: 'static://userdata.rococo.dc:8072'
       negotiationType: PLAINTEXT
+    grpcArtistClient:
+      address: 'static://artist.rococo.dc:8074'
+      negotiationType: PLAINTEXT
 
-niffler-front:
+rococo-front:
   base-uri: 'http://frontend.rococo.dc'
-niffler-gateway:
+rococo-gateway:
   base-uri: 'http://gateway.rococo.dc:8080'
 ---
 spring:
@@ -101,6 +111,9 @@ grpc:
   client:
     grpcUserdataClient:
       address: ${rococo-userdata.grpc.url}
+      negotiationType: PLAINTEXT
+    grpcArtistClient:
+      address: ${rococo-artist.grpc.url}
       negotiationType: PLAINTEXT
 
 rococo-front:
@@ -132,9 +145,12 @@ grpc:
     grpcUserdataClient:
       address: ${rococo-userdata.grpc.url}
       negotiationType: PLAINTEXT
+    grpcArtistClient:
+      address: ${rococo-artist.grpc.url}
+      negotiationType: PLAINTEXT
 
-niffler-front:
+rococo-front:
   base-uri: 'https://rococo-stage.dboyko.qa'
-niffler-gateway:
+rococo-gateway:
   base-uri: 'https://api.rococo-stage.dboyko.qa'
 ---

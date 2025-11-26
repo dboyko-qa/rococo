@@ -13,11 +13,11 @@ public class GrpcConfig {
     public void checkGrpcServer() {
         log.info("=== GRPC SERVER STATUS CHECK ===");
         try {
-            java.net.Socket socket = new java.net.Socket("localhost", 8072);
-            log.info("✅ gRPC port 8072 is ACCEPTING connections");
+            java.net.Socket socket = new java.net.Socket("localhost", 8074);
+            log.info("✅ gRPC port 8074 is ACCEPTING connections");
             socket.close();
         } catch (Exception e) {
-            log.error("❌ gRPC port 8072 is NOT accepting connections: {}", e.getMessage());
+            log.error("❌ gRPC port 8074 is NOT accepting connections: {}", e.getMessage());
         }
     }
 }

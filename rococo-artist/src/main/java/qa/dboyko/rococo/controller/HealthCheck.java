@@ -14,6 +14,6 @@ public class HealthCheck {
 
     @GetMapping("/")
     public ResponseEntity<String> home() {
-        return ResponseEntity.ok("Rococo UserData Service");
+        return ResponseEntity.ok("Rococo Artist Service");
     }
 }

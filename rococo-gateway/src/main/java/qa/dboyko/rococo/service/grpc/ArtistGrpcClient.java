@@ -1,0 +1,46 @@
+package qa.dboyko.rococo.service.grpc;
+
+import com.dboyko.rococo.grpc.*;
+import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import qa.dboyko.rococo.model.ArtistJson;
+import qa.dboyko.rococo.service.ArtistClient;
+import qa.dboyko.rococo.util.GrpcPagination;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
+@Service
+public class ArtistGrpcClient implements ArtistClient {
+
+    @GrpcClient("grpcArtistClient")
+    private ArtistServiceGrpc.ArtistServiceBlockingStub artistStub;
+
+    public ArtistJson getArtist(String id) {
+        GetArtistRequest request = GetArtistRequest.newBuilder()
+                .setName(id)
+                .build();
+
+        return ArtistJson.fromGrpcMessage(artistStub.getArtist(request).getArtist());
+    }
+
+    @Nonnull
+    @Override
+    public Page<ArtistJson> allArtists(@Nullable Pageable pageable) {
+        final ArtistsResponse response = artistStub.allArtists(
+                AllArtistsRequest.newBuilder()
+                        .setPageInfo(new GrpcPagination(pageable).pageInfo())
+                        .build()
+        );
+        return new PageImpl<>(
+                response.getArtistsList().stream().map(ArtistJson::fromGrpcMessage).toList(),
+                pageable,
+                response.getTotalElements()
+        );
+    }
+}
+

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record UserJson(
-        @JsonProperty("username")
-        String username
+public record ArtistJson(
+        @JsonProperty("name")
+        String name
 )
 {}
