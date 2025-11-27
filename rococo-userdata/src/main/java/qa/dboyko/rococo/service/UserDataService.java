@@ -74,11 +74,7 @@ public class UserDataService extends UserDataServiceGrpc.UserDataServiceImplBase
         if (userOpt.isPresent()) {
             UserEntity user = userOpt.get();
             GetUserResponse response = GetUserResponse.newBuilder()
-                    .setUserId(user.getId().toString())
-                    .setUsername(user.getUsername())
-                    .setFirstname(user.getFirstname() != null ? user.getFirstname() : "")
-                    .setLastname(user.getLastname() != null ? user.getLastname() : "")
-                    .setAvatar(user.getAvatar() != null && user.getAvatar().length > 0 ? new String(user.getAvatar(), StandardCharsets.UTF_8) : "")
+                    .setUserdata(user.toUserdataGrpc())
                     .build();
             responseObserver.onNext(response);
         } else {
@@ -88,26 +84,28 @@ public class UserDataService extends UserDataServiceGrpc.UserDataServiceImplBase
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public void updateUser(UpdateUserRequest request, StreamObserver<UpdateUserResponse> responseObserver) {
-        UUID userId = UUID.fromString(request.getUserId());
+        LOG.info("!!!!Update user request received");
+        LOG.info(request.getUserdata().toString());
+        UUID userId = UUID.fromString(request.getUserdata().getUserId());
+        Userdata userdata = request.getUserdata();
         Optional<UserEntity> userOpt = userRepository.findById(userId);
 
-        boolean success = false;
         if (userOpt.isPresent()) {
-            UserEntity user = userOpt.get();
-            user.setAvatar(!request.getAvatar().isEmpty()
-                    ? request.getAvatar().getBytes(StandardCharsets.UTF_8)
+            LOG.info("!!! user found");
+            UserEntity userEntity = userOpt.get();
+            userEntity.setAvatar(!userdata.getAvatar().isEmpty()
+                    ? userdata.getAvatar().getBytes(StandardCharsets.UTF_8)
                     : null);
-            user.setUsername(request.getUsername());
-            user.setFirstname(request.getFirstname());
-            user.setLastname(request.getLastname());
-            userRepository.save(user);
-            success = true;
+            userEntity.setUsername(userdata.getUsername());
+            userEntity.setFirstname(userdata.getFirstname());
+            userEntity.setLastname(userdata.getLastname());
+            userRepository.save(userEntity);
         }
 
         UpdateUserResponse response = UpdateUserResponse.newBuilder()
-                .setSuccess(success)
+                .setUserdata(userOpt.orElseThrow().toUserdataGrpc())
                 .build();
 
         responseObserver.onNext(response);

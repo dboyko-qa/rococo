@@ -13,26 +13,26 @@ service UserDataService {
     rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
 }
 
+message Userdata {
+    string userId = 1;
+    string username = 2;
+    optional string firstname = 3;
+    optional string lastname = 4;
+    optional string avatar = 5;
+}
+
 message GetUserRequest {
     string username = 1;
 }
 
 message GetUserResponse {
-    string userId = 1;
-    string username = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string avatar = 5;
+    Userdata userdata = 1;
 }
 
 message UpdateUserRequest {
-    string userId = 1;
-    string username = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string avatar = 5;
+    Userdata userdata = 1;
 }
 
 message UpdateUserResponse {
-    bool success = 1;
+    Userdata userdata = 1;
 }
