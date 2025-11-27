@@ -26,16 +26,6 @@ public class UserGrpcClient implements UserClient {
         return userDataStub.getUser(request).getUserdata();
     }
 
-//    @Nonnull
-//    @Override
-//    public UserJson updateUserInfo(UserJson user) {
-//        return UserJson.fromGrpc(userdataStub.updateUser(
-//                UpdateUserRequest.newBuilder()
-//                        .setUser(user.toGrpcUser())
-//                        .build()
-//        ).getUser());
-//    }
-
     @Override
     public Userdata updateUser(@Nonnull UserdataJson user) {
         UpdateUserRequest request = UpdateUserRequest.newBuilder()

@@ -1,11 +1,7 @@
 package qa.dboyko.rococo.model;
 
-import com.dboyko.rococo.grpc.GetUserResponse;
 import com.dboyko.rococo.grpc.Userdata;
-import com.google.protobuf.ByteString;
 import jakarta.annotation.Nonnull;
-
-import java.util.Base64;
 
 public record UserdataJson(
     String id,
