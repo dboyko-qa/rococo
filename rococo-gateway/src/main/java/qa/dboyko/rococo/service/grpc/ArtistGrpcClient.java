@@ -8,13 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import qa.dboyko.rococo.model.ArtistJson;
 import qa.dboyko.rococo.service.ArtistClient;
+import qa.dboyko.rococo.util.GrpcImpl;
 import qa.dboyko.rococo.util.GrpcPagination;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-
 @Service
+@GrpcImpl
 public class ArtistGrpcClient implements ArtistClient {
 
     @GrpcClient("grpcArtistClient")
