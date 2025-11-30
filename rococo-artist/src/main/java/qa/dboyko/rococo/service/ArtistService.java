@@ -2,28 +2,27 @@ package qa.dboyko.rococo.service;
 
 import com.dboyko.rococo.grpc.*;
 import io.grpc.stub.StreamObserver;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.protobuf.ByteString;
 import qa.dboyko.rococo.entity.ArtistEntity;
+import qa.dboyko.rococo.ex.ArtistNotFoundException;
 import qa.dboyko.rococo.repository.ArtistRepository;
 import qa.dboyko.rococo.util.GrpcPagination;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import static qa.dboyko.rococo.entity.ArtistEntity.fromGrpcArtist;
 
 @GrpcService
 public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
 
-    private static Logger LOG = LoggerFactory.getLogger(ArtistService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ArtistService.class);
 
     private final ArtistRepository artistRepository;
 
@@ -33,12 +32,10 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public void getArtist(GetArtistRequest request, StreamObserver<GetArtistResponse> responseObserver) {
-        LOG.info("Received getArtist request for artist: {}", request.getName());
-        String name = request.getName();
-        Optional<ArtistEntity> artistOpt = artistRepository.findByName(name);
-        ByteString avatar = ByteString.EMPTY;
+        LOG.info("Received getArtist request for artist: {}", request.getId());
+        String name = request.getId();
+        Optional<ArtistEntity> artistOpt = artistRepository.findById(UUID.fromString(name));
 
         if (artistOpt.isPresent()) {
             ArtistEntity artist = artistOpt.get();
@@ -72,5 +69,39 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    @Override
+    @Transactional
+    public void createArtist(CreateArtistRequest request, StreamObserver<CreateArtistResponse> responseObserver) {
+        ArtistEntity artistEntity = new ArtistEntity();
+                artistEntity.setName(request.getName());
+                artistEntity.setBiography(request.getBiography());
+                artistEntity.setPhoto(!request.getPhoto().isEmpty()
+                        ? request.getPhoto().getBytes(StandardCharsets.UTF_8)
+                        : null);
+        ArtistEntity newArtist = artistRepository.save(artistEntity);
+
+        responseObserver.onNext(
+                CreateArtistResponse.newBuilder()
+                        .setArtist(newArtist.toGrpcArtist())
+                        .build()
+        );
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    @Transactional
+    public void updateArtist(UpdateArtistRequest request, StreamObserver<UpdateArtistResponse> responseObserver) {
+        ArtistEntity artistEntity = artistRepository.findById(UUID.fromString(request.getArtist().getId()))
+                .orElseThrow(() -> new ArtistNotFoundException(request.getArtist().getId()));
+
+        ArtistEntity newArtistEntity = fromGrpcArtist(request.getArtist());
+        ArtistEntity updated = artistRepository.save(newArtistEntity);
+        responseObserver.onNext(
+                UpdateArtistResponse.newBuilder()
+                        .setArtist(updated.toGrpcArtist())
+                        .build()
+        );
+        responseObserver.onCompleted();
+    }
 
 }

@@ -10,11 +10,31 @@ import "google/protobuf/empty.proto";
 
 service ArtistService {
     rpc GetArtist(GetArtistRequest) returns (GetArtistResponse);
-    rpc AllArtists (AllArtistsRequest) returns (ArtistsResponse) {}
+    rpc AllArtists (AllArtistsRequest) returns (ArtistsResponse);
+    rpc CreateArtist (CreateArtistRequest) returns (CreateArtistResponse);
+    rpc UpdateArtist (UpdateArtistRequest) returns (UpdateArtistResponse);
+}
+
+message CreateArtistRequest {
+    string name = 1;
+    string biography = 2;
+    string photo = 3;
+}
+
+message CreateArtistResponse {
+    Artist artist = 1;
+}
+
+message UpdateArtistRequest {
+    Artist artist = 1;
+}
+
+message UpdateArtistResponse {
+    Artist artist = 1;
 }
 
 message GetArtistRequest {
-    string name = 1;
+    string id = 1;
 }
 
 message AllArtistsRequest {

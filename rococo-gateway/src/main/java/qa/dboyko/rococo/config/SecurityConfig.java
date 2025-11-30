@@ -38,6 +38,9 @@ public class SecurityConfig {
                                         antMatcher("/api/session/**"),
                                         antMatcher("/actuator/health"),
                                         antMatcher("/swagger-ui/**"),
+                                        antMatcher(HttpMethod.GET, "/api/artist/**"),
+                                        antMatcher(HttpMethod.GET, "/api/museum/**"),
+                                        antMatcher(HttpMethod.GET, "/api/painting/**"),
                                         antMatcher("/v3/api-docs/**"))
                                 .permitAll()
                                 .anyRequest()

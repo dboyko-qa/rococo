@@ -21,9 +21,10 @@ public class ArtistGrpcClient implements ArtistClient {
     @GrpcClient("grpcArtistClient")
     private ArtistServiceGrpc.ArtistServiceBlockingStub artistStub;
 
-    public ArtistJson getArtist(String id) {
+    @Override
+    public ArtistJson getArtist(@Nonnull String id) {
         GetArtistRequest request = GetArtistRequest.newBuilder()
-                .setName(id)
+                .setId(id)
                 .build();
 
         return ArtistJson.fromGrpcMessage(artistStub.getArtist(request).getArtist());
@@ -42,6 +43,27 @@ public class ArtistGrpcClient implements ArtistClient {
                 pageable,
                 response.getTotalElements()
         );
+    }
+
+    @Override
+    public ArtistJson createArtist(@Nonnull ArtistJson artistJson) {
+        return ArtistJson.fromGrpcMessage(
+                artistStub.createArtist(CreateArtistRequest.newBuilder()
+                    .setName(artistJson.name())
+                    .setBiography(artistJson.biography())
+                    .setPhoto(artistJson.photo())
+                    .build())
+                .getArtist());
+    }
+
+    @Override
+    public ArtistJson updateArtist(@Nonnull ArtistJson artistJson) {
+        return ArtistJson.fromGrpcMessage(
+                artistStub.updateArtist(UpdateArtistRequest.newBuilder()
+                                .setArtist(artistJson.toGrpcMessage())
+                        .build())
+                        .getArtist());
+
     }
 }
 

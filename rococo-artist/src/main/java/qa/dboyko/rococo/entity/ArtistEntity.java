@@ -1,12 +1,11 @@
 package qa.dboyko.rococo.entity;
 
 import com.dboyko.rococo.grpc.Artist;
-import com.dboyko.rococo.grpc.ArtistOrBuilder;
-import com.dboyko.rococo.grpc.ArtistProto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -41,6 +40,15 @@ public class ArtistEntity {
             grpcArtistBuilder.setPhoto(new String(this.photo, StandardCharsets.UTF_8));
         }
         return grpcArtistBuilder.build();
+    }
+
+    public static ArtistEntity fromGrpcArtist(@Nonnull Artist grpcArtist) {
+        ArtistEntity artistEntity = new ArtistEntity();
+        artistEntity.setId(UUID.fromString(grpcArtist.getId()));
+        artistEntity.setName(grpcArtist.getName());
+        artistEntity.setBiography(grpcArtist.getBiography());
+        artistEntity.setPhoto(grpcArtist.getPhoto().getBytes(StandardCharsets.UTF_8));
+        return artistEntity;
     }
 
 }

@@ -22,6 +22,7 @@ public record ArtistJson(
     @IsPhotoString
     @Size(max = RococoGatewayServiceConfig.ONE_MB)
     String photo
+
 ) {
 
     public static @Nonnull ArtistJson fromGrpcMessage(@Nonnull Artist artist) {
@@ -31,5 +32,14 @@ public record ArtistJson(
                 artist.getBiography(),
                 artist.getPhoto()
         );
+    }
+
+    public Artist toGrpcMessage() {
+        return Artist.newBuilder()
+                .setId(this.id)
+                .setBiography(this.biography)
+                .setName(this.name)
+                .setPhoto(this.photo)
+        .build();
     }
 }
