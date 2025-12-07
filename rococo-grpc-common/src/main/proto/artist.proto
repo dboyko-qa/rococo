@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package com.dboyko.rococo.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.dboyko.rococo.grpc";
+option java_outer_classname = "ArtistProto";
+
+import "google/protobuf/empty.proto";
+
+service ArtistService {
+    rpc GetArtist(GetArtistRequest) returns (GetArtistResponse);
+    rpc AllArtists (AllArtistsRequest) returns (ArtistsResponse);
+    rpc CreateArtist (CreateArtistRequest) returns (CreateArtistResponse);
+    rpc UpdateArtist (UpdateArtistRequest) returns (UpdateArtistResponse);
+}
+
+message CreateArtistRequest {
+    string name = 1;
+    string biography = 2;
+    string photo = 3;
+}
+
+message CreateArtistResponse {
+    Artist artist = 1;
+}
+
+message UpdateArtistRequest {
+    Artist artist = 1;
+}
+
+message UpdateArtistResponse {
+    Artist artist = 1;
+}
+
+message GetArtistRequest {
+    string id = 1;
+}
+
+message AllArtistsRequest {
+    PageInfo page_info = 1;
+}
+
+message GetArtistResponse {
+    Artist artist = 1;
+}
+
+message ArtistsResponse {
+    repeated Artist artists = 1;
+    int64 total_elements = 2;
+    int32 total_pages = 3;
+}
+
+message Artist {
+    string id = 1;
+    string name = 2;
+    optional string biography = 3;
+    optional string photo = 4;
+}
+
+message PageInfo {
+    int32 page = 1;
+    int32 size = 2;
+}
