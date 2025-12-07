@@ -20,10 +20,10 @@ public class ArtistEntity {
     @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
     private UUID id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "name", unique = true, nullable = false, length = 255)
     private String name;
 
-    @Column(name = "biography")
+    @Column(name = "biography", length = 2000)
     private String biography;
 
     @Column(name = "photo", columnDefinition = "bytea")

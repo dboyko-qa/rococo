@@ -4,7 +4,7 @@ public class ArtistAlreadyExistsException extends RuntimeException {
     public ArtistAlreadyExistsException() {
     }
 
-    public ArtistAlreadyExistsException(String code) {
-        super("Country with code %s already exists".formatted(code));
+    public ArtistAlreadyExistsException(String name) {
+        super("Artist with name %s already exists".formatted(name));
     }
 }

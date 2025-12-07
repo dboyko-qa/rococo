@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import qa.dboyko.rococo.model.ArtistJson;
 import qa.dboyko.rococo.service.ArtistClient;
@@ -16,6 +17,7 @@ import qa.dboyko.rococo.util.GrpcImpl;
 
 @RestController
 @RequestMapping("/api/artist")
+@Validated
 public class ArtistController {
     private static final Logger LOG = LoggerFactory.getLogger(ArtistController.class);
 
@@ -39,7 +41,7 @@ public class ArtistController {
     @PostMapping
     public ArtistJson createArtist(@Valid @RequestBody ArtistJson artist,
                                    @AuthenticationPrincipal Jwt principal){
-        LOG.info("!!! call to create artist {}", artist.toString());
+        LOG.info("!!! call to create artist {}", artist.name());
         return artistClient.createArtist(artist);
     }
 

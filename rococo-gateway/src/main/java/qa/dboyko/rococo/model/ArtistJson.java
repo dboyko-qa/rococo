@@ -4,6 +4,7 @@ import com.dboyko.rococo.grpc.Artist;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import qa.dboyko.rococo.config.RococoGatewayServiceConfig;
 import qa.dboyko.rococo.validation.IsPhotoString;
@@ -13,6 +14,7 @@ public record ArtistJson(
     @JsonProperty("id")
     String id,
     @JsonProperty("name")
+    @NotBlank(message = "Name cannot be blank")
     @Size(min = 3, max = 255, message = "Name can`t be less than 3 and longer than 255 characters")
     String name,
     @JsonProperty("biography")
@@ -34,7 +36,7 @@ public record ArtistJson(
         );
     }
 
-    public Artist toGrpcMessage() {
+    public @Nonnull Artist toGrpcMessage() {
         return Artist.newBuilder()
                 .setId(this.id)
                 .setBiography(this.biography)

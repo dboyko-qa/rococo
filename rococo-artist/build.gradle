@@ -31,6 +31,7 @@ dependencies {
     implementation "io.grpc:grpc-netty-shaded:${project.ext.grpcVersion}"
     implementation "io.grpc:grpc-netty:${project.ext.grpcVersion}"
     implementation "io.grpc:grpc-services:${project.ext.grpcVersion}"
+    implementation "io.grpc:grpc-protobuf:${project.ext.grpcVersion}"
 //    implementation "org.springframework.kafka:spring-kafka:${project.ext.springKafkaVersion}"
     implementation "org.springframework.cloud:spring-cloud-starter-vault-config"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.7"
