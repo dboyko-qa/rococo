@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import qa.dboyko.rococo.model.ErrorJson;
 
+import java.util.Date;
+import java.util.List;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -35,11 +38,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(status)
                 .body(new ErrorJson(
-                        appName + ": " + type,
-                        status.getReasonPhrase(),
+                        new Date(),
                         status.value(),
-                        message,
-                        request.getRequestURI()
+                        List.of(message)
                 ));
     }
 

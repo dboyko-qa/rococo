@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import qa.dboyko.rococo.model.*;
 import qa.dboyko.rococo.service.ArtistClient;
-import qa.dboyko.rococo.util.GrpcImpl;
 
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class PaintingController {
     private static final Logger LOG = LoggerFactory.getLogger(PaintingController.class);
 
     @Autowired
-    @GrpcImpl
     private ArtistClient artistClient;
 
 //    @PostMapping("/{id}")
@@ -65,13 +63,14 @@ public class PaintingController {
 
     @GetMapping
     public Page<ArtistJson> allArtists(Pageable pageable) {
-        Page<ArtistJson> allArtistsPage = artistClient.allArtists(pageable);
-
-        return new PageImpl<>(
-                allArtistsPage.stream().toList(),
-                pageable,
-                allArtistsPage.getTotalElements()
-        );
+//        Page<ArtistJson> allArtistsPage = artistClient.allArtists(pageable);
+//
+//        return new PageImpl<>(
+//                allArtistsPage.stream().toList(),
+//                pageable,
+//                allArtistsPage.getTotalElements()
+//        );
+        return null;
     }
 }
 

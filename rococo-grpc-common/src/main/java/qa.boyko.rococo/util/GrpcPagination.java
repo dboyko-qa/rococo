@@ -1,8 +1,7 @@
-package qa.dboyko.rococo.util;
+package qa.boyko.rococo.util;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
 

@@ -7,16 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import qa.boyko.rococo.util.GrpcPagination;
 import qa.dboyko.rococo.entity.ArtistEntity;
 import qa.dboyko.rococo.ex.ArtistNotFoundException;
 import qa.dboyko.rococo.repository.ArtistRepository;
-import qa.dboyko.rococo.util.GrpcPagination;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
-
 import static qa.dboyko.rococo.entity.ArtistEntity.fromGrpcArtist;
 
 @GrpcService
@@ -48,13 +46,25 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
 
     @Override
     public void allArtists(AllArtistsRequest request, StreamObserver<ArtistsResponse> responseObserver) {
+        Page<ArtistEntity> allArtistsPage;
         final PageInfo pageInfo = request.getPageInfo();
-        final Page<ArtistEntity> allArtistsPage = artistRepository.findAll(
-                new GrpcPagination(
-                        pageInfo.getPage(),
-                        pageInfo.getSize()
-                ).pageable()
-        );
+        if (request.hasNameFilter()) {
+            allArtistsPage = artistRepository.findAllByNameContainsIgnoreCase(
+                    request.getNameFilter(),
+                    new GrpcPagination(
+                            pageInfo.getPage(),
+                            pageInfo.getSize()
+                    ).pageable()
+            );
+        }
+        else {
+            allArtistsPage = artistRepository.findAll(
+                    new GrpcPagination(
+                            pageInfo.getPage(),
+                            pageInfo.getSize()
+                    ).pageable()
+            );
+        }
 
         responseObserver.onNext(
                 ArtistsResponse.newBuilder()
@@ -67,7 +77,6 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void createArtist(CreateArtistRequest request, StreamObserver<CreateArtistResponse> responseObserver) {
         ArtistEntity artistEntity = new ArtistEntity();
                 artistEntity.setName(request.getName());
@@ -78,7 +87,7 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
 
         ArtistEntity newArtist;
 
-        newArtist = artistRepository.saveAndFlush(artistEntity);
+        newArtist = artistRepository.save(artistEntity);
 
         responseObserver.onNext(
                 CreateArtistResponse.newBuilder()

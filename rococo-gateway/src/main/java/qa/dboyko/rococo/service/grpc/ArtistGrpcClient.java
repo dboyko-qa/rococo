@@ -2,20 +2,20 @@ package qa.dboyko.rococo.service.grpc;
 
 import com.dboyko.rococo.grpc.*;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import qa.dboyko.rococo.model.ArtistJson;
 import qa.dboyko.rococo.service.ArtistClient;
-import qa.dboyko.rococo.util.GrpcImpl;
 import qa.dboyko.rococo.util.GrpcPagination;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Service
-@GrpcImpl
+@ConditionalOnProperty(prefix = "rococo-artist", name = "client", havingValue = "grpc")
 public class ArtistGrpcClient implements ArtistClient {
 
     @GrpcClient("grpcArtistClient")
@@ -32,12 +32,14 @@ public class ArtistGrpcClient implements ArtistClient {
 
     @Nonnull
     @Override
-    public Page<ArtistJson> allArtists(@Nullable Pageable pageable) {
-        final ArtistsResponse response = artistStub.allArtists(
-                AllArtistsRequest.newBuilder()
-                        .setPageInfo(new GrpcPagination(pageable).pageInfo())
-                        .build()
-        );
+    public Page<ArtistJson> allArtists(@Nullable Pageable pageable, @Nullable String nameFilter) {
+        AllArtistsRequest allArtistsRequest = AllArtistsRequest.newBuilder()
+                .setPageInfo(new GrpcPagination(pageable).pageInfo())
+                .build();
+        if (nameFilter != null && !nameFilter.isBlank()) {
+            allArtistsRequest = allArtistsRequest.toBuilder().setNameFilter(nameFilter).build();
+        }
+        final ArtistsResponse response = artistStub.allArtists(allArtistsRequest);
         return new PageImpl<>(
                 response.getArtistsList().stream().map(ArtistJson::fromGrpcMessage).toList(),
                 pageable,

@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import qa.dboyko.rococo.model.ArtistJson;
 import qa.dboyko.rococo.service.ArtistClient;
-import qa.dboyko.rococo.util.GrpcImpl;
 
 @RestController
 @RequestMapping("/api/artist")
@@ -22,7 +22,6 @@ public class ArtistController {
     private static final Logger LOG = LoggerFactory.getLogger(ArtistController.class);
 
     @Autowired
-    @GrpcImpl
     private ArtistClient artistClient;
 
     @PatchMapping
@@ -46,9 +45,10 @@ public class ArtistController {
     }
 
     @GetMapping
-    public Page<ArtistJson> allArtists(Pageable pageable) {
-        LOG.info("!!! call to get artists list {}", pageable.getPageNumber());
-        Page<ArtistJson> allArtistsPage = artistClient.allArtists(pageable);
+    public Page<ArtistJson> allArtists(@RequestParam(required = false) String name,
+                                       @PageableDefault Pageable pageable) {
+        LOG.info("!!! call to get artists list {}", pageable.getPageSize());
+        Page<ArtistJson> allArtistsPage = artistClient.allArtists(pageable, name);
 
         return new PageImpl<>(
                 allArtistsPage.stream().toList(),

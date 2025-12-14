@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package com.dboyko.rococo.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.dboyko.rococo.grpc";
+option java_outer_classname = "MuseumProto";
+
+import "pageinfo.proto";
+
+service MuseumService {
+    rpc GetMuseum(GetMuseumRequest) returns (GetMuseumResponse);
+    rpc AllMuseums (AllMuseumsRequest) returns (MuseumsResponse);
+    rpc CreateMuseum (CreateMuseumRequest) returns (CreateMuseumResponse);
+    rpc UpdateMuseum (UpdateMuseumRequest) returns (UpdateMuseumResponse);
+}
+
+message CreateMuseumRequest {
+    string title = 1;
+    optional string description = 2;
+    optional string photo = 3;
+    optional string city = 4;
+    optional string country_id = 5;
+}
+
+message CreateMuseumResponse {
+    Museum museum = 1;
+}
+
+message UpdateMuseumRequest {
+    Museum museum = 1;
+}
+
+message UpdateMuseumResponse {
+    Museum museum = 1;
+}
+
+message GetMuseumRequest {
+    string id = 1;
+}
+
+message AllMuseumsRequest {
+    optional PageInfo page_info = 1;
+    optional string name_filter = 2;
+}
+
+message GetMuseumResponse {
+    Museum museum = 1;
+}
+
+message MuseumsResponse {
+    repeated Museum museums = 1;
+    int64 total_elements = 2;
+    int32 total_pages = 3;
+}
+
+message Museum {
+    string id = 1;
+    string title = 2;
+    optional string description = 3;
+    optional string photo = 4;
+    optional string city = 5;
+    optional string country_id = 6;
+}
