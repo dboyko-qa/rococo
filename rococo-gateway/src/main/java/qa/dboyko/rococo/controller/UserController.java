@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import qa.dboyko.rococo.model.UserdataJson;
 import qa.dboyko.rococo.service.UserClient;
-import qa.dboyko.rococo.util.GrpcImpl;
 
 import static qa.dboyko.rococo.model.UserdataJson.fromGrpcMessage;
 
@@ -16,7 +15,6 @@ import static qa.dboyko.rococo.model.UserdataJson.fromGrpcMessage;
 public class UserController {
 
     @Autowired
-    @GrpcImpl
     private UserClient userClient;
 
     @PatchMapping()

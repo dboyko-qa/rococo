@@ -7,6 +7,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public interface UserClient {
-    public Userdata getUser(String username);
-    public Userdata updateUser(UserdataJson userdata);
+    Userdata getUser(String username);
+
+    Userdata updateUser(UserdataJson userdata);
 }

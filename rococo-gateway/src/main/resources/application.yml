@@ -18,9 +18,15 @@ logging:
     org.springframework.security.oauth2: INFO
     net.devh.boot.grpc: INFO
     org.springframework.boot.autoconfigure: INFO
-    io.grpc: DEBUG
-    org.springframework.grpc: DEBUG
-    qa.dboyko.rococo.service: DEBUG
+
+rococo-user:
+  client: grpc
+rococo-artist:
+  client: grpc
+rococo-museum:
+  client: grpc
+rococo-geo:
+  client: grpc
 
 ---
 spring:
@@ -48,6 +54,20 @@ grpc:
         use-native-transports: false
     grpcArtistClient:
       address: 'static://127.0.0.1:8074'
+      negotiationType: PLAINTEXT
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      netty:
+        use-native-transports: false
+    grpcGeoClient:
+      address: 'static://127.0.0.1:8076'
+      negotiationType: PLAINTEXT
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      netty:
+        use-native-transports: false
+    grpcMuseumClient:
+      address: 'static://127.0.0.1:8078'
       negotiationType: PLAINTEXT
       enableKeepAlive: true
       keepAliveWithoutCalls: true
@@ -82,6 +102,12 @@ grpc:
     grpcArtistClient:
       address: 'static://artist.rococo.dc:8074'
       negotiationType: PLAINTEXT
+    grpcGeoClient:
+      address: 'static://geo.rococo.dc:8076'
+      negotiationType: PLAINTEXT
+    grpcMuseumClient:
+      address: 'static://museum.rococo.dc:8078'
+      negotiationType: PLAINTEXT
 
 rococo-front:
   base-uri: 'http://frontend.rococo.dc'
@@ -115,6 +141,12 @@ grpc:
     grpcArtistClient:
       address: ${rococo-artist.grpc.url}
       negotiationType: PLAINTEXT
+    grpcGeoClient:
+      address: ${rococo-geo.grpc.url}
+      negotiationType: PLAINTEXT
+    grpcMuseumClient:
+      address: ${rococo-museum.grpc.url}
+      negotiationType: PLAINTEXT
 
 rococo-front:
   base-uri: 'https://rococo.dboyko.qa'
@@ -147,6 +179,12 @@ grpc:
       negotiationType: PLAINTEXT
     grpcArtistClient:
       address: ${rococo-artist.grpc.url}
+      negotiationType: PLAINTEXT
+    grpcGeoClient:
+      address: ${rococo-geo.grpc.url}
+      negotiationType: PLAINTEXT
+    grpcMuseumClient:
+      address: ${rococo-museum.grpc.url}
       negotiationType: PLAINTEXT
 
 rococo-front:

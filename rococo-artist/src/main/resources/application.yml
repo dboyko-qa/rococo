@@ -4,7 +4,7 @@ server:
 grpc:
   server:
     port: 8074
-    max-inbound-message-size: 1MB
+    max-inbound-message-size: 10MB
 
 spring:
   cloud:
@@ -25,7 +25,7 @@ spring:
     baseline-on-migrate: true
     baseline-version: 0
     schemas: public
-    locations: classpath:db/migration/rococo-artis
+    locations: classpath:db/migration/rococo-artist
   jpa:
     hibernate:
       ddl-auto: none
@@ -48,8 +48,6 @@ logging:
     org.springframework.security: INFO
     org.springframework.security.oauth2: INFO
     org.springframework.boot.autoconfigure: INFO
-    net.devh: DEBUG
-    org.springframework: DEBUG
 ---
 spring:
   config:

@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 
+import java.util.regex.Pattern;
+
 @GrpcAdvice
 public class GrpcErrorHandler {
     private final static Logger LOG = LoggerFactory.getLogger(GrpcErrorHandler.class);
@@ -43,9 +45,18 @@ public class GrpcErrorHandler {
         LOG.warn("Handling DataIntegrityViolationException ");
 
         Throwable cause = e.getMostSpecificCause();
-
+        String description = cause != null ? cause.getMessage() : e.getMessage();
+        if (cause.getMessage().contains("ERROR: duplicate key value violates unique constraint")) {
+            description = "Artist %s already exists".formatted(
+                    Pattern.compile("\\(name\\)=\\(([^)]+)\\)")
+                            .matcher(cause.getMessage()).results()
+                            .findFirst()
+                            .map(m -> m.group(1))
+                            .orElse("")
+            );
+        }
         return Status.ALREADY_EXISTS
-                .withDescription(cause != null ? cause.getMessage() : e.getMessage())
+                .withDescription(description)
                 .withCause(e)
                 .asRuntimeException();
     }

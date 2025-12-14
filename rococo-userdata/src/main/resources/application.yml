@@ -48,8 +48,6 @@ logging:
     org.springframework.security: INFO
     org.springframework.security.oauth2: INFO
     org.springframework.boot.autoconfigure: INFO
-    net.devh: DEBUG
-    org.springframework: DEBUG
 ---
 spring:
   config:
