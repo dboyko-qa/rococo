@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package com.dboyko.rococo.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.dboyko.rococo.grpc";
+option java_outer_classname = "PaintingProto";
+
+import "pageinfo.proto";
+
+service PaintingService {
+    rpc GetPainting(GetPaintingRequest) returns (GetPaintingResponse);
+    rpc GetPaintingsForArtist(GetPaintingsForArtistRequest) returns (PaintingsResponse);
+    rpc AllPaintings (AllPaintingsRequest) returns (PaintingsResponse);
+    rpc CreatePainting (CreatePaintingRequest) returns (CreatePaintingResponse);
+    rpc UpdatePainting (UpdatePaintingRequest) returns (UpdatePaintingResponse);
+}
+
+message CreatePaintingRequest {
+    string title = 1;
+    optional string description = 2;
+    optional string content = 3;
+    optional string city = 4;
+    optional string country_id = 5;
+    string museum_id = 6;
+    string artist_id = 7;
+}
+
+message CreatePaintingResponse {
+    Painting painting = 1;
+}
+
+message UpdatePaintingRequest {
+    Painting painting = 1;
+}
+
+message UpdatePaintingResponse {
+    Painting painting = 1;
+}
+
+message GetPaintingRequest {
+    string id = 1;
+}
+
+message AllPaintingsRequest {
+    optional PageInfo page_info = 1;
+    optional string title_filter = 2;
+}
+
+message GetPaintingsForArtistRequest {
+    PageInfo page_info = 1;
+    string artist_id = 2;
+}
+
+message GetPaintingResponse {
+    Painting painting = 1;
+}
+
+message PaintingsResponse {
+    repeated Painting paintings = 1;
+    int64 total_elements = 2;
+    int32 total_pages = 3;
+}
+
+message Painting {
+    string id = 1;
+    string title = 2;
+    optional string description = 3;
+    optional string content = 4;
+    string museum_id = 5;
+    string artist_id = 6;
+}

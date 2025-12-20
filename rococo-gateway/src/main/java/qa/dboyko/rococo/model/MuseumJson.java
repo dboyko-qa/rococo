@@ -36,7 +36,7 @@ public record MuseumJson(
                 museum.getTitle(),
                 museum.getDescription(),
                 museum.getPhoto(),
-                new GeoJson(museum.getCity(), new CountryJson(museum.getId(), countryName))
+                new GeoJson(museum.getCity(), new CountryJson(museum.getCountryId(), countryName))
         );
     }
 

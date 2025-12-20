@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import qa.dboyko.rococo.model.*;
-import qa.dboyko.rococo.service.ArtistClient;
-
-import java.util.List;
+import qa.dboyko.rococo.service.PaintingClient;
 
 @RestController
 @RequestMapping("/api/painting")
@@ -21,56 +20,49 @@ public class PaintingController {
     private static final Logger LOG = LoggerFactory.getLogger(PaintingController.class);
 
     @Autowired
-    private ArtistClient artistClient;
+    private PaintingClient paintingClient;
 
-//    @PostMapping("/{id}")
-//    public Boolean updateUser(@PathVariable String id) {
-//        return artistClient.getArtist(id, name).getSuccess();
-//    }
+    @PatchMapping()
+    public PaintingJson updateUser(@Valid @RequestBody PaintingJson painting,
+                              @AuthenticationPrincipal Jwt principal) {
+        return paintingClient.updatePainting(painting);
+    }
 
     @GetMapping("/{id}")
     public PaintingJson getPainting(@PathVariable String id) {
         LOG.info("!!! call to get painting {}", id);
-        return new PaintingJson("","","","",
-                new MuseumJson("", "", "", "",
-                        new GeoJson("",
-                                new CountryJson("", ""))));
-//        return artistClient.getArtist(id);
+        return paintingClient.getPainting(id);
     }
 
     @GetMapping("/author/{id}")
-    public Page<PaintingJson> getPaintingForArtist(@PathVariable String id,
+    public Page<PaintingJson> getPaintingsForArtist(@PathVariable String id,
                                                    Pageable pageable) {
         LOG.info("!!! call to get paintings for artist {}", id);
-        List<PaintingJson> listPainting = List.of(new PaintingJson("","","","",
-                new MuseumJson("", "", "", "",
-                        new GeoJson("",
-                                new CountryJson("", "")))));
-        Page<PaintingJson> pagePainting = Page.empty();
+        Page<PaintingJson> allPaintingsPage = paintingClient.getPaintingsForArtist(pageable, id);
+
         return new PageImpl<>(
-                pagePainting.stream().toList(),
+                allPaintingsPage.stream().toList(),
                 pageable,
-                pagePainting.getTotalElements()
+                allPaintingsPage.getTotalElements()
         );
-//        return artistClient.getArtist(id);
     }
 
     @PostMapping
-    public ArtistJson createArtist(@Valid @RequestBody ArtistJson artist,
+    public PaintingJson createPainting(@Valid @RequestBody PaintingJson painting,
                                    @AuthenticationPrincipal Jwt principal){
-        return artistClient.createArtist(artist);
+        return paintingClient.createPainting(painting);
     }
 
     @GetMapping
-    public Page<ArtistJson> allArtists(Pageable pageable) {
-//        Page<ArtistJson> allArtistsPage = artistClient.allArtists(pageable);
-//
-//        return new PageImpl<>(
-//                allArtistsPage.stream().toList(),
-//                pageable,
-//                allArtistsPage.getTotalElements()
-//        );
-        return null;
+    public Page<PaintingJson> allPaintings(@RequestParam(required = false) String title,
+                                           @PageableDefault Pageable pageable) {
+        Page<PaintingJson> allPaintingsPage = paintingClient.allPaintings(pageable, title);
+
+        return new PageImpl<>(
+                allPaintingsPage.stream().toList(),
+                pageable,
+                allPaintingsPage.getTotalElements()
+        );
     }
 }
 
