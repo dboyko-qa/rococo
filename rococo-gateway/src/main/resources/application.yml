@@ -27,6 +27,8 @@ rococo-museum:
   client: grpc
 rococo-geo:
   client: grpc
+rococo-painting:
+  client: grpc
 
 ---
 spring:
@@ -44,6 +46,8 @@ spring:
         jwt:
           issuer-uri: 'http://127.0.0.1:9000'
 grpc:
+  server:
+    max-inbound-message-size: 10MB
   client:
     grpcUserdataClient:
       address: 'static://127.0.0.1:8072'
@@ -52,6 +56,7 @@ grpc:
       keepAliveWithoutCalls: true
       netty:
         use-native-transports: false
+      max-inbound-message-size: 10MB
     grpcArtistClient:
       address: 'static://127.0.0.1:8074'
       negotiationType: PLAINTEXT
@@ -59,6 +64,7 @@ grpc:
       keepAliveWithoutCalls: true
       netty:
         use-native-transports: false
+      max-inbound-message-size: 10MB
     grpcGeoClient:
       address: 'static://127.0.0.1:8076'
       negotiationType: PLAINTEXT
@@ -66,6 +72,7 @@ grpc:
       keepAliveWithoutCalls: true
       netty:
         use-native-transports: false
+      max-inbound-message-size: 10MB
     grpcMuseumClient:
       address: 'static://127.0.0.1:8078'
       negotiationType: PLAINTEXT
@@ -73,6 +80,15 @@ grpc:
       keepAliveWithoutCalls: true
       netty:
         use-native-transports: false
+      max-inbound-message-size: 10MB
+    grpcPaintingClient:
+      address: 'static://127.0.0.1:8070'
+      negotiationType: PLAINTEXT
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      netty:
+        use-native-transports: false
+      max-inbound-message-size: 10MB
 
 rococo-front:
   base-uri: 'http://127.0.0.1:3000'
@@ -107,6 +123,9 @@ grpc:
       negotiationType: PLAINTEXT
     grpcMuseumClient:
       address: 'static://museum.rococo.dc:8078'
+      negotiationType: PLAINTEXT
+    grpcPaintingClient:
+      address: 'static://painting.rococo.dc:8070'
       negotiationType: PLAINTEXT
 
 rococo-front:
@@ -147,6 +166,9 @@ grpc:
     grpcMuseumClient:
       address: ${rococo-museum.grpc.url}
       negotiationType: PLAINTEXT
+    grpcPaintingClient:
+      address: ${rococo-painting.grpc.url}
+      negotiationType: PLAINTEXT
 
 rococo-front:
   base-uri: 'https://rococo.dboyko.qa'
@@ -185,6 +207,9 @@ grpc:
       negotiationType: PLAINTEXT
     grpcMuseumClient:
       address: ${rococo-museum.grpc.url}
+      negotiationType: PLAINTEXT
+    grpcPaintingClient:
+      address: ${rococo-painting.grpc.url}
       negotiationType: PLAINTEXT
 
 rococo-front:

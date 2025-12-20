@@ -82,7 +82,7 @@ public class MuseumService extends MuseumServiceGrpc.MuseumServiceImplBase {
         museumEntity.setTitle(request.getTitle());
         museumEntity.setDescription(request.getDescription());
         museumEntity.setCity(request.getCity());
-        museumEntity.setCountry_id(UUID.fromString(request.getCountryId()));
+        museumEntity.setCountryId(UUID.fromString(request.getCountryId()));
         museumEntity.setPhoto(!request.getPhoto().isEmpty()
                 ? request.getPhoto().getBytes(StandardCharsets.UTF_8)
                 : null);

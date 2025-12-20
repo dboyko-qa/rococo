@@ -33,7 +33,7 @@ public class MuseumEntity {
     private String city;
 
     @Column(name = "country_id")
-    private UUID country_id;
+    private UUID countryId;
 
     public Museum toGrpcMuseum() {
         Museum.Builder grpcMuseumBuilder = Museum.newBuilder();
@@ -45,8 +45,8 @@ public class MuseumEntity {
         if (!this.city.isEmpty()) {
             grpcMuseumBuilder.setCity(this.getCity());
         }        
-        if (this.country_id != null) {
-            grpcMuseumBuilder.setCountryId(this.getCountry_id().toString());
+        if (this.countryId != null) {
+            grpcMuseumBuilder.setCountryId(this.getCountryId().toString());
         }
         if (this.photo != null && this.photo.length > 0) {
             grpcMuseumBuilder.setPhoto(new String(this.photo, StandardCharsets.UTF_8));
@@ -60,7 +60,7 @@ public class MuseumEntity {
         museumEntity.setTitle(grpcMuseum.getTitle());
         museumEntity.setDescription(grpcMuseum.getDescription());
         museumEntity.setCity(grpcMuseum.getCity());
-        museumEntity.setCountry_id(UUID.fromString(grpcMuseum.getCountryId()));
+        museumEntity.setCountryId(UUID.fromString(grpcMuseum.getCountryId()));
         museumEntity.setPhoto(grpcMuseum.getPhoto().getBytes(StandardCharsets.UTF_8));
         return museumEntity;
     }

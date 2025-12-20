@@ -22,9 +22,6 @@ import static qa.dboyko.rococo.model.MuseumJson.fromGrpcMessage;
 @ConditionalOnProperty(prefix = "rococo-museum", name = "client", havingValue = "grpc")
 public class MuseumGrpcClient implements MuseumClient {
 
-//    @GrpcClient("grpcMuseumClient")
-//    private MuseumServiceGrpc.MuseumServiceBlockingStub museumStub;
-
     @GrpcClient("grpcMuseumClient")
     private MuseumServiceGrpc.MuseumServiceBlockingStub museumStub;
 
