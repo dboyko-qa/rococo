@@ -4,10 +4,10 @@ create table if not exists painting
 (
     id        UUID           NOT NULL DEFAULT gen_random_uuid(),
     title      VARCHAR(255)  NOT NULL,
-    description VARCHAR(1000) ,
+    description VARCHAR(2000) ,
     content     BYTEA,
-    artist_id        UUID   not null,
-    museum_id        UUID   not null,
+    artist_id        UUID,
+    museum_id        UUID,
     PRIMARY KEY (id)
     );
 

@@ -10,12 +10,14 @@ import org.springframework.data.domain.Page;
 import qa.boyko.rococo.util.GrpcPagination;
 import qa.dboyko.rococo.entity.MuseumEntity;
 import qa.dboyko.rococo.ex.MuseumNotFoundException;
+import qa.dboyko.rococo.mapper.MuseumGrpcMapper;
 import qa.dboyko.rococo.repository.MuseumRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import static qa.dboyko.rococo.entity.MuseumEntity.fromGrpcMuseum;
+import static qa.dboyko.rococo.mapper.MuseumGrpcMapper.fromGrpcMuseum;
+import static qa.dboyko.rococo.mapper.MuseumGrpcMapper.toGrpcMuseum;
 
 @GrpcService
 public class MuseumService extends MuseumServiceGrpc.MuseumServiceImplBase {
@@ -37,7 +39,7 @@ public class MuseumService extends MuseumServiceGrpc.MuseumServiceImplBase {
                 .orElseThrow(() -> new MuseumNotFoundException(id));
 
         GetMuseumResponse response = GetMuseumResponse.newBuilder()
-                .setMuseum(museum.toGrpcMuseum())
+                .setMuseum(toGrpcMuseum(museum))
                 .build();
         responseObserver.onNext(response);
 
@@ -68,7 +70,7 @@ public class MuseumService extends MuseumServiceGrpc.MuseumServiceImplBase {
 
         responseObserver.onNext(
                 MuseumsResponse.newBuilder()
-                        .addAllMuseums(allMuseumsPage.getContent().stream().map(MuseumEntity::toGrpcMuseum).toList())
+                        .addAllMuseums(allMuseumsPage.getContent().stream().map(MuseumGrpcMapper::toGrpcMuseum).toList())
                         .setTotalElements(allMuseumsPage.getTotalElements())
                         .setTotalPages(allMuseumsPage.getTotalPages())
                         .build()
@@ -93,7 +95,7 @@ public class MuseumService extends MuseumServiceGrpc.MuseumServiceImplBase {
 
         responseObserver.onNext(
                 CreateMuseumResponse.newBuilder()
-                        .setMuseum(newMuseum.toGrpcMuseum())
+                        .setMuseum(toGrpcMuseum(newMuseum))
                         .build()
         );
         responseObserver.onCompleted();
@@ -109,7 +111,7 @@ public class MuseumService extends MuseumServiceGrpc.MuseumServiceImplBase {
         MuseumEntity updated = museumRepository.save(newMuseumEntity);
         responseObserver.onNext(
                 UpdateMuseumResponse.newBuilder()
-                        .setMuseum(updated.toGrpcMuseum())
+                        .setMuseum(toGrpcMuseum(updated))
                         .build()
         );
         responseObserver.onCompleted();

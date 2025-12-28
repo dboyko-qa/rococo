@@ -1,0 +1,31 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.vault.config.VaultAutoConfiguration
+      - org.springframework.cloud.vault.config.VaultObservationAutoConfiguration
+      - org.springframework.cloud.vault.config.VaultReactiveAutoConfiguration
+
+grpc:
+  server:
+    port: 0  # Random port for tests
+    in-process:
+      name: test-server
+
+rococo-artist:
+  client: mock
+rococo-museum:
+  client: mock
+rococo-painting:
+  client: mock
+rococo-geo:
+  client: mock
+rococo-user:
+  client: mock
+
+logging:
+  level:
+    root: WARN
+    qa.dboyko.rococo: DEBUG
+
+rococo-front:
+  base-uri: 'http://127.0.0.1:3000'

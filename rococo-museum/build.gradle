@@ -42,7 +42,9 @@ dependencies {
     runtimeOnly "org.postgresql:postgresql:42.7.5"
     implementation "org.postgresql:postgresql:42.7.5"
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'}
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "com.h2database:h2:${project.ext.h2Version}"
+}
 
 dependencyManagement {
     imports {

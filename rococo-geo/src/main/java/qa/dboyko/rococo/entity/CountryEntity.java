@@ -11,12 +11,12 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "\"country\"")
+@Table(name = "country")
 public class CountryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @Column(name = "name", unique = true, nullable = false)
@@ -29,11 +29,5 @@ public class CountryEntity {
         return grpcCountryBuilder.build();
     }
 
-    public static CountryEntity fromGrpcCountry(@Nonnull Country grpcCountry) {
-        CountryEntity countryEntity = new CountryEntity();
-        countryEntity.setId(UUID.fromString(grpcCountry.getId()));
-        countryEntity.setName(grpcCountry.getName());
-        return countryEntity;
-    }
 
 }

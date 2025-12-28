@@ -33,7 +33,7 @@ public class GrpcErrorHandler {
     }
 
     @GrpcExceptionHandler
-    public StatusRuntimeException handleNotFoundException(ChangeSetPersister.NotFoundException e) {
+    public StatusRuntimeException handlePaintingNotFoundException(PaintingNotFoundException e) {
         return Status.NOT_FOUND
                 .withDescription(e.getMessage())
                 .withCause(e)

@@ -23,8 +23,8 @@ public class PaintingController {
     private PaintingClient paintingClient;
 
     @PatchMapping()
-    public PaintingJson updateUser(@Valid @RequestBody PaintingJson painting,
-                              @AuthenticationPrincipal Jwt principal) {
+    public PaintingJson updatePainting(@Valid @RequestBody PaintingJson painting,
+                                       @AuthenticationPrincipal Jwt principal) {
         return paintingClient.updatePainting(painting);
     }
 

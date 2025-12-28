@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.Size;
+import lombok.NoArgsConstructor;
 import qa.dboyko.rococo.validation.IsPhotoString;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -30,13 +31,13 @@ public record MuseumJson(
 
     }
 
-    public static @Nonnull MuseumJson fromGrpcMessage(@Nonnull Museum museum, String countryName) {
+    public static @Nonnull MuseumJson fromGrpcMessage(@Nonnull Museum museum, CountryJson countryJson) {
         return new MuseumJson(
                 museum.getId(),
                 museum.getTitle(),
                 museum.getDescription(),
                 museum.getPhoto(),
-                new GeoJson(museum.getCity(), new CountryJson(museum.getCountryId(), countryName))
+                new GeoJson(museum.getCity(), countryJson)
         );
     }
 
@@ -49,5 +50,15 @@ public record MuseumJson(
                 .setCity(this.geo.city())
                 .setCountryId(this.geo.country().id())
                 .build();
+    }
+
+    public static MuseumJson empty() {
+        return new MuseumJson(
+                "",
+                "",
+                "",
+                null,
+                null
+        );
     }
 }

@@ -2,24 +2,26 @@ package qa.dboyko.rococo.entity;
 
 import com.dboyko.rococo.grpc.Museum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "\"museum\"")
+@Table(name = "museum")
 public class MuseumEntity {
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
+    @Column(name = "id", nullable = false)
     private UUID id;
 
+    @NotBlank
     @Column(name = "title", unique = true, nullable = false, length = 255)
     private String title;
 
@@ -35,34 +37,5 @@ public class MuseumEntity {
     @Column(name = "country_id")
     private UUID countryId;
 
-    public Museum toGrpcMuseum() {
-        Museum.Builder grpcMuseumBuilder = Museum.newBuilder();
-        grpcMuseumBuilder.setId(this.getId().toString());
-        grpcMuseumBuilder.setTitle(this.getTitle());
-        if (!this.description.isEmpty()) {
-            grpcMuseumBuilder.setDescription(this.getDescription());
-        }
-        if (!this.city.isEmpty()) {
-            grpcMuseumBuilder.setCity(this.getCity());
-        }        
-        if (this.countryId != null) {
-            grpcMuseumBuilder.setCountryId(this.getCountryId().toString());
-        }
-        if (this.photo != null && this.photo.length > 0) {
-            grpcMuseumBuilder.setPhoto(new String(this.photo, StandardCharsets.UTF_8));
-        }
-        return grpcMuseumBuilder.build();
-    }
-
-    public static MuseumEntity fromGrpcMuseum(@Nonnull Museum grpcMuseum) {
-        MuseumEntity museumEntity = new MuseumEntity();
-        museumEntity.setId(UUID.fromString(grpcMuseum.getId()));
-        museumEntity.setTitle(grpcMuseum.getTitle());
-        museumEntity.setDescription(grpcMuseum.getDescription());
-        museumEntity.setCity(grpcMuseum.getCity());
-        museumEntity.setCountryId(UUID.fromString(grpcMuseum.getCountryId()));
-        museumEntity.setPhoto(grpcMuseum.getPhoto().getBytes(StandardCharsets.UTF_8));
-        return museumEntity;
-    }
 
 }

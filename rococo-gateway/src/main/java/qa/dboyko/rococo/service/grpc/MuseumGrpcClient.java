@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import qa.dboyko.rococo.model.CountryJson;
 import qa.dboyko.rococo.model.MuseumJson;
 import qa.dboyko.rococo.service.GeoClient;
 import qa.dboyko.rococo.service.MuseumClient;
@@ -33,7 +34,7 @@ public class MuseumGrpcClient implements MuseumClient {
         Museum museum = museumStub.getMuseum(GetMuseumRequest.newBuilder().setId(id).build()).getMuseum();
         return fromGrpcMessage(
                 museum,
-                geoClient.getCountry(museum.getCountryId()).name());
+                safeGetCountry(museum.getCountryId()));
     }
 
     @Nonnull
@@ -48,7 +49,7 @@ public class MuseumGrpcClient implements MuseumClient {
         final MuseumsResponse response = museumStub.allMuseums(allMuseumsRequest);
         return new PageImpl<>(
                 response.getMuseumsList().stream().map(
-                                m -> fromGrpcMessage(m, geoClient.getCountry(m.getCountryId()).name()))
+                                m -> fromGrpcMessage(m, safeGetCountry(m.getCountryId())))
                         .toList(),
                 pageable,
                 response.getTotalElements()
@@ -67,7 +68,7 @@ public class MuseumGrpcClient implements MuseumClient {
                                 .setPhoto(museumJson.photo())
                                 .build())
                 .getMuseum();
-        return fromGrpcMessage(museum, geoClient.getCountry(museum.getCountryId()).name());
+        return fromGrpcMessage(museum, safeGetCountry(museum.getCountryId()));
     }
 
     @Override
@@ -75,8 +76,20 @@ public class MuseumGrpcClient implements MuseumClient {
         Museum museum = museumStub.updateMuseum(
                         UpdateMuseumRequest.newBuilder().setMuseum(museumJson.toGrpcMessage()).build())
                 .getMuseum();
-        return fromGrpcMessage(museum, geoClient.getCountry(museum.getCountryId()).name());
+        return fromGrpcMessage(museum, safeGetCountry(museum.getCountryId()));
 
+    }
+
+    /**
+     * Returns country information for a museum.
+     * If Geo service is unavailable, returns an empty country instead of failing the request.
+     */
+    private CountryJson safeGetCountry(String countryId) {
+        try {
+            return geoClient.getCountry(countryId);
+        } catch (Exception e) {
+            return new CountryJson("", "");
+        }
     }
 }
 

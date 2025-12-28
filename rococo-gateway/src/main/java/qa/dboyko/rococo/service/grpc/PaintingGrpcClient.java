@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import qa.dboyko.rococo.model.ArtistJson;
+import qa.dboyko.rococo.model.MuseumJson;
 import qa.dboyko.rococo.model.PaintingJson;
 import qa.dboyko.rococo.service.ArtistClient;
 import qa.dboyko.rococo.service.MuseumClient;
@@ -37,8 +39,8 @@ public class PaintingGrpcClient implements PaintingClient {
         Painting painting = paintingStub.getPainting(GetPaintingRequest.newBuilder().setId(id).build()).getPainting();
         return fromGrpcMessage(
                 painting,
-                museumClient.getMuseum(painting.getMuseumId()),
-                artistClient.getArtist(painting.getArtistId()));
+                safeGetMuseum(painting.getMuseumId()),
+                safeGetArtist(painting.getArtistId()));
     }
 
     @Nonnull
@@ -54,8 +56,8 @@ public class PaintingGrpcClient implements PaintingClient {
         return new PageImpl<>(
                 response.getPaintingsList().stream().map(
                                 m -> fromGrpcMessage(m,
-                                        museumClient.getMuseum(m.getMuseumId()),
-                                        artistClient.getArtist(m.getArtistId())))
+                                        safeGetMuseum(m.getMuseumId()),
+                                        safeGetArtist(m.getArtistId())))
                         .toList(),
                 pageable,
                 response.getTotalElements()
@@ -73,8 +75,8 @@ public class PaintingGrpcClient implements PaintingClient {
         return new PageImpl<>(
                 response.getPaintingsList().stream().map(
                                 m -> fromGrpcMessage(m,
-                                        museumClient.getMuseum(m.getMuseumId()),
-                                        artistClient.getArtist(m.getArtistId())))
+                                        safeGetMuseum(m.getMuseumId()),
+                                        safeGetArtist(m.getArtistId())))
                         .toList(),
                 pageable,
                 response.getTotalElements());
@@ -92,8 +94,8 @@ public class PaintingGrpcClient implements PaintingClient {
                                 .build())
                 .getPainting();
         return fromGrpcMessage(painting,
-                museumClient.getMuseum(painting.getMuseumId()),
-                artistClient.getArtist(painting.getArtistId()));
+                safeGetMuseum(painting.getMuseumId()),
+                safeGetArtist(painting.getArtistId()));
     }
 
     @Override
@@ -102,9 +104,25 @@ public class PaintingGrpcClient implements PaintingClient {
                         UpdatePaintingRequest.newBuilder().setPainting(paintingJson.toGrpcMessage()).build())
                 .getPainting();
         return fromGrpcMessage(painting,
-                museumClient.getMuseum(painting.getMuseumId()),
-                artistClient.getArtist(painting.getArtistId()));
+                safeGetMuseum(painting.getMuseumId()),
+                safeGetArtist(painting.getArtistId()));
 
+    }
+
+    private MuseumJson safeGetMuseum(String museumId) {
+        try {
+            return museumClient.getMuseum(museumId);
+        } catch (Exception e) {
+            return MuseumJson.empty();
+        }
+    }
+
+    private ArtistJson safeGetArtist(String artistId) {
+        try {
+            return artistClient.getArtist(artistId);
+        } catch (Exception e) {
+            return ArtistJson.empty();
+        }
     }
 }
 

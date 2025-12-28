@@ -44,4 +44,8 @@ public record ArtistJson(
                 .setPhoto(this.photo)
         .build();
     }
+
+    public static ArtistJson empty() {
+        return new ArtistJson("", "", null, null);
+    }
 }

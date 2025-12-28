@@ -1,0 +1,2 @@
+ALTER TABLE artist
+    ALTER COLUMN biography DROP NOT NULL;
