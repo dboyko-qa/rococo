@@ -3,10 +3,12 @@ package qa.dboyko.rococo.service;
 import com.dboyko.rococo.grpc.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,9 @@ public class UserDataService extends UserDataServiceGrpc.UserDataServiceImplBase
     private final UserRepository userRepository;
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     public UserDataService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -38,25 +43,29 @@ public class UserDataService extends UserDataServiceGrpc.UserDataServiceImplBase
     public void listener(@Payload String userJson,
                          ConsumerRecord<String, UserJson> cr) throws JsonProcessingException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
         UserJson user = objectMapper.readValue(userJson, UserJson.class);
 
         userRepository.findByUsername(user.username())
                 .ifPresentOrElse(
                         u -> LOG.info("### User already exist in DB, kafka event will be skipped: {}", cr.toString()),
                         () -> {
-                            LOG.info("### Kafka consumer record: {}", cr.toString());
+                            LOG.info("Kafka event received. key={}, offset={}", cr.key(), cr.offset());
                             LOG.info("username: {}", user.username());
 
                             UserEntity userDataEntity = new UserEntity();
                             userDataEntity.setUsername(user.username());
-                            UserEntity userEntity = userRepository.save(userDataEntity);
-
-                            LOG.info(
-                                    "### User '{}' successfully saved to database with id: {}",
-                                    user.username(),
-                                    userEntity.getId()
-                            );
+                            UserEntity userEntity;
+                            try {
+                                userEntity = userRepository.save(userDataEntity);
+                                userRepository.flush();
+                                LOG.info(
+                                        "### User '{}' successfully saved to database with id: {}",
+                                        user.username(),
+                                        userEntity.getId()
+                                );
+                            } catch (DataIntegrityViolationException e) {
+                                LOG.info("User already exists, skipping");
+                            }
                         }
                 );
     }
@@ -65,6 +74,7 @@ public class UserDataService extends UserDataServiceGrpc.UserDataServiceImplBase
     @Transactional(readOnly = true)
     public void getUser(GetUserRequest request, StreamObserver<GetUserResponse> responseObserver) {
         LOG.info("Received getUser request for user: {}", request.getUsername());
+
         String username = request.getUsername();
         Optional<UserEntity> userOpt = userRepository.findByUsername(username);
         ByteString avatar = ByteString.EMPTY;
@@ -75,10 +85,13 @@ public class UserDataService extends UserDataServiceGrpc.UserDataServiceImplBase
                     .setUserdata(user.toUserdataGrpc())
                     .build();
             responseObserver.onNext(response);
+            responseObserver.onCompleted();
         } else {
-            responseObserver.onError(new Exception("User not found"));
+            responseObserver.onError(Status.NOT_FOUND
+                    .withDescription("User not found")
+                    .asRuntimeException());
         }
-        responseObserver.onCompleted();
+
     }
 
     @Override
@@ -89,21 +102,23 @@ public class UserDataService extends UserDataServiceGrpc.UserDataServiceImplBase
         UUID userId = UUID.fromString(request.getUserdata().getUserId());
         Userdata userdata = request.getUserdata();
         Optional<UserEntity> userOpt = userRepository.findById(userId);
+        UserEntity userEntity = userOpt.orElseThrow(() ->
+                Status.NOT_FOUND
+                        .withDescription("User not found")
+                        .asRuntimeException()
+        );
 
-        if (userOpt.isPresent()) {
-            LOG.info("!!! user found");
-            UserEntity userEntity = userOpt.get();
-            userEntity.setAvatar(!userdata.getAvatar().isEmpty()
-                    ? userdata.getAvatar().getBytes(StandardCharsets.UTF_8)
-                    : null);
-            userEntity.setUsername(userdata.getUsername());
-            userEntity.setFirstname(userdata.getFirstname());
-            userEntity.setLastname(userdata.getLastname());
-            userRepository.save(userEntity);
-        }
+        LOG.info("!!! user found");
+        userEntity.setAvatar(!userdata.getAvatar().isEmpty()
+                ? userdata.getAvatar().getBytes(StandardCharsets.UTF_8)
+                : null);
+        userEntity.setFirstname(userdata.getFirstname());
+        userEntity.setLastname(userdata.getLastname());
+        userRepository.save(userEntity);
+        userRepository.flush();
 
         UpdateUserResponse response = UpdateUserResponse.newBuilder()
-                .setUserdata(userOpt.orElseThrow().toUserdataGrpc())
+                .setUserdata(userEntity.toUserdataGrpc())
                 .build();
 
         responseObserver.onNext(response);

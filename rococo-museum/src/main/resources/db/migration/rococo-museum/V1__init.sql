@@ -4,7 +4,7 @@ create table if not exists museum
 (
     id        UUID           NOT NULL DEFAULT gen_random_uuid(),
     title      VARCHAR(255)  NOT NULL,
-    description VARCHAR(1000) ,
+    description VARCHAR(2000) ,
     photo     BYTEA,
     city      VARCHAR(255) ,
     country_id        UUID ,

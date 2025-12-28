@@ -11,12 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import qa.boyko.rococo.util.GrpcPagination;
 import qa.dboyko.rococo.entity.PaintingEntity;
 import qa.dboyko.rococo.ex.PaintingNotFoundException;
+import qa.dboyko.rococo.mapper.PaintingGrpcMapper;
 import qa.dboyko.rococo.repository.PaintingRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import static qa.dboyko.rococo.entity.PaintingEntity.fromGrpcPainting;
+import static qa.dboyko.rococo.mapper.PaintingGrpcMapper.fromGrpcPainting;
 
 @GrpcService
 public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase {
@@ -32,13 +33,14 @@ public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase
 
     @Override
     public void getPainting(GetPaintingRequest request, StreamObserver<GetPaintingResponse> responseObserver) {
+
         LOG.info("Received getPainting request for painting: {}", request.getId());
         String id = request.getId();
         PaintingEntity painting = paintingRepository.findById(UUID.fromString(id))
                 .orElseThrow(() -> new PaintingNotFoundException(id));
 
         GetPaintingResponse response = GetPaintingResponse.newBuilder()
-                .setPainting(painting.toGrpcPainting())
+                .setPainting(PaintingGrpcMapper.toGrpcPainting(painting))
                 .build();
         responseObserver.onNext(response);
 
@@ -69,7 +71,7 @@ public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase
 
         responseObserver.onNext(
                 PaintingsResponse.newBuilder()
-                        .addAllPaintings(allPaintingsPage.getContent().stream().map(PaintingEntity::toGrpcPainting).toList())
+                        .addAllPaintings(allPaintingsPage.getContent().stream().map(PaintingGrpcMapper::toGrpcPainting).toList())
                         .setTotalElements(allPaintingsPage.getTotalElements())
                         .setTotalPages(allPaintingsPage.getTotalPages())
                         .build()
@@ -92,7 +94,7 @@ public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase
 
         responseObserver.onNext(
                 PaintingsResponse.newBuilder()
-                        .addAllPaintings(allPaintingsPage.getContent().stream().map(PaintingEntity::toGrpcPainting).toList())
+                        .addAllPaintings(allPaintingsPage.getContent().stream().map(PaintingGrpcMapper::toGrpcPainting).toList())
                         .setTotalElements(allPaintingsPage.getTotalElements())
                         .setTotalPages(allPaintingsPage.getTotalPages())
                         .build()
@@ -102,8 +104,8 @@ public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase
 
     @Override
     public void createPainting(CreatePaintingRequest request, StreamObserver<CreatePaintingResponse> responseObserver) {
-        LOG.info("Received request to create painting: {}",
-                request.getTitle() + " " + request.getDescription() + " " + request.getArtistId() + " " + request.getMuseumId());
+        LOG.info("Received createPainting request, title: {}, artistId: {}, museumId: {}",
+                request.getTitle(), request.getArtistId(), request.getMuseumId());
         PaintingEntity paintingEntity = new PaintingEntity();
         paintingEntity.setTitle(request.getTitle());
         paintingEntity.setDescription(request.getDescription());
@@ -119,7 +121,7 @@ public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase
 
         responseObserver.onNext(
                 CreatePaintingResponse.newBuilder()
-                        .setPainting(newPainting.toGrpcPainting())
+                        .setPainting(PaintingGrpcMapper.toGrpcPainting(newPainting))
                         .build()
         );
         responseObserver.onCompleted();
@@ -129,7 +131,7 @@ public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase
     @Override
     @Transactional
     public void updatePainting(UpdatePaintingRequest request, StreamObserver<UpdatePaintingResponse> responseObserver) {
-        LOG.info("Received request to update painting: {}", request.toString());
+        LOG.info("Received updatePainting request for painting id: {}", request.getPainting().getId());
         PaintingEntity paintingEntity = paintingRepository.findById(UUID.fromString(request.getPainting().getId()))
                 .orElseThrow(() -> new PaintingNotFoundException(request.getPainting().getId()));
 
@@ -137,7 +139,7 @@ public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase
         PaintingEntity updated = paintingRepository.save(newPaintingEntity);
         responseObserver.onNext(
                 UpdatePaintingResponse.newBuilder()
-                        .setPainting(updated.toGrpcPainting())
+                        .setPainting(PaintingGrpcMapper.toGrpcPainting(updated))
                         .build()
         );
         responseObserver.onCompleted();

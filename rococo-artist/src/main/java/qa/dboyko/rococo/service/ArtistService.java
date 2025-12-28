@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import qa.boyko.rococo.util.GrpcPagination;
 import qa.dboyko.rococo.entity.ArtistEntity;
 import qa.dboyko.rococo.ex.ArtistNotFoundException;
+import qa.dboyko.rococo.mapper.ArtistGrpcMapper;
 import qa.dboyko.rococo.repository.ArtistRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
-import static qa.dboyko.rococo.entity.ArtistEntity.fromGrpcArtist;
 
 @GrpcService
 public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
@@ -37,7 +37,7 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
                 .orElseThrow(() -> new ArtistNotFoundException(id));
 
         GetArtistResponse response = GetArtistResponse.newBuilder()
-                .setArtist(artist.toGrpcArtist())
+                .setArtist(ArtistGrpcMapper.toGrpc(artist))
                 .build();
         responseObserver.onNext(response);
 
@@ -68,7 +68,7 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
 
         responseObserver.onNext(
                 ArtistsResponse.newBuilder()
-                        .addAllArtists(allArtistsPage.getContent().stream().map(ArtistEntity::toGrpcArtist).toList())
+                        .addAllArtists(allArtistsPage.getContent().stream().map(ArtistGrpcMapper::toGrpc).toList())
                         .setTotalElements(allArtistsPage.getTotalElements())
                         .setTotalPages(allArtistsPage.getTotalPages())
                         .build()
@@ -91,7 +91,7 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
 
         responseObserver.onNext(
                 CreateArtistResponse.newBuilder()
-                        .setArtist(newArtist.toGrpcArtist())
+                        .setArtist(ArtistGrpcMapper.toGrpc(newArtist))
                         .build()
         );
         responseObserver.onCompleted();
@@ -104,11 +104,11 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
         ArtistEntity artistEntity = artistRepository.findById(UUID.fromString(request.getArtist().getId()))
                 .orElseThrow(() -> new ArtistNotFoundException(request.getArtist().getId()));
 
-        ArtistEntity newArtistEntity = fromGrpcArtist(request.getArtist());
+        ArtistEntity newArtistEntity = ArtistGrpcMapper.fromGrpc(request.getArtist());
         ArtistEntity updated = artistRepository.save(newArtistEntity);
         responseObserver.onNext(
                 UpdateArtistResponse.newBuilder()
-                        .setArtist(updated.toGrpcArtist())
+                        .setArtist(ArtistGrpcMapper.toGrpc(updated))
                         .build()
         );
         responseObserver.onCompleted();

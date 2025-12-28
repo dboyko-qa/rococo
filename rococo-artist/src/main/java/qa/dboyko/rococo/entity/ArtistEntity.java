@@ -1,23 +1,20 @@
 package qa.dboyko.rococo.entity;
 
-import com.dboyko.rococo.grpc.Artist;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "\"artist\"")
+@Table(name = "artist")
 public class ArtistEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @Column(name = "name", unique = true, nullable = false, length = 255)
@@ -28,27 +25,5 @@ public class ArtistEntity {
 
     @Column(name = "photo", columnDefinition = "bytea")
     private byte[] photo;
-
-    public Artist toGrpcArtist() {
-        Artist.Builder grpcArtistBuilder = Artist.newBuilder();
-        grpcArtistBuilder.setId(this.getId().toString());
-        grpcArtistBuilder.setName(this.getName());
-        if (!this.biography.isEmpty()) {
-            grpcArtistBuilder.setBiography(this.getBiography());
-        }
-        if (this.photo != null && this.photo.length > 0) {
-            grpcArtistBuilder.setPhoto(new String(this.photo, StandardCharsets.UTF_8));
-        }
-        return grpcArtistBuilder.build();
-    }
-
-    public static ArtistEntity fromGrpcArtist(@Nonnull Artist grpcArtist) {
-        ArtistEntity artistEntity = new ArtistEntity();
-        artistEntity.setId(UUID.fromString(grpcArtist.getId()));
-        artistEntity.setName(grpcArtist.getName());
-        artistEntity.setBiography(grpcArtist.getBiography());
-        artistEntity.setPhoto(grpcArtist.getPhoto().getBytes(StandardCharsets.UTF_8));
-        return artistEntity;
-    }
 
 }
