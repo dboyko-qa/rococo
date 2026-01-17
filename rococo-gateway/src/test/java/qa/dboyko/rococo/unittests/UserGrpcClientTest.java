@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import qa.dboyko.rococo.model.UserdataJson;
 import qa.dboyko.rococo.service.grpc.UserGrpcClient;
@@ -55,7 +54,7 @@ class UserGrpcClientTest {
         Userdata result = userGrpcClient.getUser("johndoe");
 
         // Assert
-        assertNotNull(result);
+        assertNonnull(result);
         assertEquals("1", result.getUserId());
         assertEquals("johndoe", result.getUsername());
     }
@@ -97,7 +96,7 @@ class UserGrpcClientTest {
         Userdata result = userGrpcClient.updateUser(userJson);
 
         // Assert
-        assertNotNull(result);
+        assertNonnull(result);
         assertEquals("Johnny", result.getFirstname());
         assertEquals("Doe", result.getLastname());
     }

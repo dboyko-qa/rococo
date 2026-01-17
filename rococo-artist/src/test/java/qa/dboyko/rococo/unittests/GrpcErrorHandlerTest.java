@@ -35,7 +35,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.handleNotFoundException(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.NOT_FOUND);
         assertThat(result.getStatus().getDescription())
                 .contains(artistId)
@@ -54,7 +54,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.handleAlreadyExistsException(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.ALREADY_EXISTS);
         assertThat(result.getStatus().getDescription())
                 .contains(artistName)
@@ -76,7 +76,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.handleDataIntegrity(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.ALREADY_EXISTS);
         assertThat(result.getStatus().getDescription())
                 .contains("Vincent van Gogh")
@@ -97,7 +97,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.handleDataIntegrity(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.ALREADY_EXISTS);
         assertThat(result.getStatus().getDescription()).contains(errorMessage);
         assertThat(result.getCause()).isEqualTo(exception);
@@ -113,7 +113,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.handleDataIntegrity(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.ALREADY_EXISTS);
         assertThat(result.getStatus().getDescription()).isEqualTo("Constraint violation");
         assertThat(result.getCause()).isEqualTo(exception);
@@ -129,7 +129,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.defaultHandler(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.INTERNAL);
         assertThat(result.getStatus().getDescription()).isEqualTo("Unexpected error occurred");
         assertThat(result.getCause()).isEqualTo(exception);
@@ -145,7 +145,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.defaultHandler(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.INTERNAL);
         assertThat(result.getCause()).isEqualTo(exception);
     }
@@ -160,7 +160,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.handleIllegalArgumentException(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.INVALID_ARGUMENT);
         assertThat(result.getStatus().getDescription()).isEqualTo("Invalid argument");
         assertThat(result.getCause()).isEqualTo(exception);
@@ -176,7 +176,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.defaultHandler(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.INTERNAL);
         assertThat(result.getStatus().getDescription()).isEqualTo("Null pointer occurred");
     }
@@ -255,7 +255,7 @@ class GrpcErrorHandlerTest {
         StatusRuntimeException result = grpcErrorHandler.handleDataIntegrity(exception);
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.getStatus().getCode()).isEqualTo(Status.Code.ALREADY_EXISTS);
         assertThat(result.getStatus().getDescription()).contains("Artist  already exists");
     }

@@ -7,7 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import qa.boyko.rococo.util.GrpcPagination;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import qa.dboyko.rococo.entity.MuseumEntity;
 import qa.dboyko.rococo.ex.MuseumNotFoundException;
 import qa.dboyko.rococo.mapper.MuseumGrpcMapper;
@@ -47,30 +48,36 @@ public class MuseumService extends MuseumServiceGrpc.MuseumServiceImplBase {
     }
 
     @Override
-    public void allMuseums(AllMuseumsRequest request, StreamObserver<MuseumsResponse> responseObserver) {
+    public void allMuseums(AllMuseumsRequest request,
+                           StreamObserver<MuseumsResponse> responseObserver) {
+
         Page<MuseumEntity> allMuseumsPage;
-        final PageInfo pageInfo = request.getPageInfo();
+
+        Pageable pageable;
+        PageInfo pageInfo = request.getPageInfo();
+
+        if (pageInfo.getSize() > 0) {
+            pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
+        } else {
+            pageable = Pageable.unpaged();
+        }
+
         if (request.hasNameFilter()) {
             allMuseumsPage = museumRepository.findAllByTitleContainsIgnoreCase(
                     request.getNameFilter(),
-                    new GrpcPagination(
-                            pageInfo.getPage(),
-                            pageInfo.getSize()
-                    ).pageable()
+                    pageable
             );
-        }
-        else {
-            allMuseumsPage = museumRepository.findAll(
-                    new GrpcPagination(
-                            pageInfo.getPage(),
-                            pageInfo.getSize()
-                    ).pageable()
-            );
+        } else {
+            allMuseumsPage = museumRepository.findAll(pageable);
         }
 
         responseObserver.onNext(
                 MuseumsResponse.newBuilder()
-                        .addAllMuseums(allMuseumsPage.getContent().stream().map(MuseumGrpcMapper::toGrpcMuseum).toList())
+                        .addAllMuseums(
+                                allMuseumsPage.getContent().stream()
+                                        .map(MuseumGrpcMapper::toGrpcMuseum)
+                                        .toList()
+                        )
                         .setTotalElements(allMuseumsPage.getTotalElements())
                         .setTotalPages(allMuseumsPage.getTotalPages())
                         .build()

@@ -52,7 +52,7 @@ class ArtistGrpcClientTest {
         ArtistJson result = artistGrpcClient.getArtist("123");
 
         // Assert
-        assertNotNull(result);
+        assertNonnull(result);
         assertEquals("123", result.id());
         assertEquals("Van Gogh", result.name());
         verify(artistStub).getArtist(any(GetArtistRequest.class));
@@ -73,7 +73,7 @@ class ArtistGrpcClientTest {
         Page<ArtistJson> result = artistGrpcClient.allArtists(pageable, null);
 
         // Assert
-        assertNotNull(result);
+        assertNonnull(result);
         assertEquals(1, result.getTotalElements());
         assertEquals("Van Gogh", result.getContent().get(0).name());
         verify(artistStub).allArtists(any(AllArtistsRequest.class));
@@ -94,7 +94,7 @@ class ArtistGrpcClientTest {
         Page<ArtistJson> result = artistGrpcClient.allArtists(pageable, "Van");
 
         // Assert
-        assertNotNull(result);
+        assertNonnull(result);
         assertEquals(1, result.getTotalElements());
         assertEquals("Van Gogh", result.getContent().get(0).name());
     }
@@ -115,7 +115,7 @@ class ArtistGrpcClientTest {
         ArtistJson result = artistGrpcClient.createArtist(artistJson);
 
         // Assert
-        assertNotNull(result);
+        assertNonnull(result);
         assertEquals("Van Gogh", result.name());
         verify(artistStub).createArtist(any(CreateArtistRequest.class));
     }
@@ -134,7 +134,7 @@ class ArtistGrpcClientTest {
         ArtistJson result = artistGrpcClient.updateArtist(artistJson);
 
         // Assert
-        assertNotNull(result);
+        assertNonnull(result);
         assertEquals("Van Gogh", result.name());
         verify(artistStub).updateArtist(any(UpdateArtistRequest.class));
     }

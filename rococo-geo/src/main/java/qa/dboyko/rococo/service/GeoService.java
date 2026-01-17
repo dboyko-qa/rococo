@@ -43,6 +43,21 @@ public class GeoService extends GeoServiceGrpc.GeoServiceImplBase {
     }
 
     @Override
+    public void getCountryByName(GetCountryByNameRequest request, StreamObserver<GetCountryResponse> responseObserver) {
+        LOG.info("!!! call to get country with name {}", request.getName());
+        String name = request.getName();
+        CountryEntity country = countryRepository.findByName(name)
+                .orElseThrow(() -> new CountryNotFoundException(name));
+
+        GetCountryResponse response = GetCountryResponse.newBuilder()
+                .setCountry(country.toGrpcCountry())
+                .build();
+        responseObserver.onNext(response);
+
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void getAllCountries(GetAllCountriesRequest request, StreamObserver<GetAllCountriesResponse> responseObserver) {
         LOG.info("!!! call to get all countries");
         final PageInfo pageInfo = request.getPageInfo();

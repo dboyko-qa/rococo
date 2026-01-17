@@ -1,13 +1,11 @@
 package qa.dboyko.rococo.entity;
 
-import com.dboyko.rococo.grpc.Painting;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Entity
@@ -17,7 +15,7 @@ import java.util.UUID;
 public class PaintingEntity {
 
     @Id
-    @NotNull
+    @Nonnull
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private UUID id;
