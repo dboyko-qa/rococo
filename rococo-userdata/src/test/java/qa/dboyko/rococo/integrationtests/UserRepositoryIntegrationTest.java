@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
 import qa.dboyko.rococo.entity.UserEntity;
 import qa.dboyko.rococo.repository.UserRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @DisplayName("UserRepository Integration Tests")
+@ActiveProfiles("test")
 class UserRepositoryIntegrationTest {
 
     @Autowired
@@ -93,6 +94,6 @@ class UserRepositoryIntegrationTest {
         UserEntity saved = userRepository.saveAndFlush(user);
 
         // Assert
-        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getId()).isNonnull();
     }
 }

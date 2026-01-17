@@ -37,7 +37,7 @@ class PaintingRepositoryIntegrationTest {
         PaintingEntity saved = paintingRepository.save(painting);
 
         PaintingEntity found = paintingRepository.findById(saved.getId()).orElse(null);
-        assertNotNull(found);
+        assertNonnull(found);
         assertEquals("Mona Lisa", found.getTitle());
         assertEquals("Famous painting", found.getDescription());
     }

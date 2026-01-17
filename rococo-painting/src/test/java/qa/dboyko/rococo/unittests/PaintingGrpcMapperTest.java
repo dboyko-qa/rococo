@@ -24,7 +24,7 @@ class PaintingGrpcMapperTest {
         Painting grpc = PaintingGrpcMapper.toGrpcPainting(entity);
 
         // Assert
-        assertNotNull(grpc);
+        assertNonnull(grpc);
         assertEquals("", grpc.getId());
         assertEquals("", grpc.getTitle());
     }

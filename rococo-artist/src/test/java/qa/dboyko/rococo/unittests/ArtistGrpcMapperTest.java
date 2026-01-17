@@ -38,7 +38,7 @@ class ArtistGrpcMapperTest {
         Artist grpcArtist = ArtistGrpcMapper.toGrpc(entity);
 
         // Assert
-        assertThat(grpcArtist).isNotNull();
+        assertThat(grpcArtist).isNonnull();
         assertThat(grpcArtist.getId()).isEqualTo(id.toString());
         assertThat(grpcArtist.getName()).isEqualTo(name);
         assertThat(grpcArtist.getBiography()).isEqualTo(biography);
@@ -60,7 +60,7 @@ class ArtistGrpcMapperTest {
         Artist grpcArtist = ArtistGrpcMapper.toGrpc(entity);
 
         // Assert
-        assertThat(grpcArtist).isNotNull();
+        assertThat(grpcArtist).isNonnull();
         assertThat(grpcArtist.getId()).isEqualTo(id.toString());
         assertThat(grpcArtist.getName()).isEqualTo(name);
         assertThat(grpcArtist.getBiography()).isEmpty();
@@ -190,7 +190,7 @@ class ArtistGrpcMapperTest {
         ArtistEntity entity = ArtistGrpcMapper.fromGrpc(grpcArtist);
 
         // Assert
-        assertThat(entity).isNotNull();
+        assertThat(entity).isNonnull();
         assertThat(entity.getId()).isEqualTo(id);
         assertThat(entity.getName()).isEqualTo(name);
         assertThat(entity.getBiography()).isEqualTo(biography);
@@ -213,7 +213,7 @@ class ArtistGrpcMapperTest {
         ArtistEntity entity = ArtistGrpcMapper.fromGrpc(grpcArtist);
 
         // Assert
-        assertThat(entity).isNotNull();
+        assertThat(entity).isNonnull();
         assertThat(entity.getId()).isEqualTo(id);
         assertThat(entity.getName()).isEqualTo(name);
         assertThat(entity.getBiography()).isNull();

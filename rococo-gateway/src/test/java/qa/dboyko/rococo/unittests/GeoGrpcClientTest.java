@@ -13,12 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import qa.dboyko.rococo.model.CountryJson;
 import qa.dboyko.rococo.service.grpc.GeoGrpcClient;
-import qa.dboyko.rococo.util.GrpcPagination;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -50,7 +46,7 @@ class GeoGrpcClientTest {
         CountryJson result = geoClient.getCountry(countryId);
 
         // Assert
-        assertNotNull(result);
+        assertNonnull(result);
         assertEquals(countryId, result.id());
         assertEquals("Testland", result.name());
 
@@ -77,7 +73,7 @@ class GeoGrpcClientTest {
         Page<CountryJson> page = geoClient.allCountries(pageable);
 
         // Assert
-        assertNotNull(page);
+        assertNonnull(page);
         assertEquals(2, page.getContent().size());
         assertEquals("Country1", page.getContent().get(0).name());
         assertEquals("Country2", page.getContent().get(1).name());
@@ -98,7 +94,7 @@ class GeoGrpcClientTest {
         Page<CountryJson> page = geoClient.allCountries(pageable);
 
         // Assert
-        assertNotNull(page);
+        assertNonnull(page);
         assertTrue(page.getContent().isEmpty());
         assertEquals(0, page.getTotalElements());
     }

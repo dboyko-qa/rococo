@@ -1,2 +1,2 @@
-CREATE UNIQUE INDEX IF NOT EXISTS uq_painting_title_ci
-ON painting (LOWER(title));
+CREATE UNIQUE INDEX IF NOT EXISTS uq_artist_ci
+ON painting (artist_id);

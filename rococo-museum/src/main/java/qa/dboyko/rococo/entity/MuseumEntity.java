@@ -1,9 +1,8 @@
 package qa.dboyko.rococo.entity;
 
-import com.dboyko.rococo.grpc.Museum;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +15,7 @@ import java.util.UUID;
 public class MuseumEntity {
 
     @Id
-    @NotNull
+    @Nonnull
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private UUID id;

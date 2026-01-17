@@ -87,14 +87,14 @@ class MuseumGrpcClientTest {
         MuseumJson result = museumGrpcClient.getMuseum("1");
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
         assertThat(result.id()).isEqualTo("1");
         assertThat(result.title()).isEqualTo("Louvre");
-        assertThat(result.geo()).isNotNull();
+        assertThat(result.geo()).isNonnull();
         assertThat(result.geo().city()).isEqualTo("Paris");
 
         // Country fallback assertions
-        assertThat(result.geo().country()).isNotNull();
+        assertThat(result.geo().country()).isNonnull();
         assertThat(result.geo().country().id()).isEqualTo("");
         assertThat(result.geo().country().name()).isEmpty();
     }
@@ -144,7 +144,7 @@ class MuseumGrpcClientTest {
         Page<MuseumJson> result = museumGrpcClient.allMuseums(pageable, "Louvre");
 
         // Assert
-        assertThat(result).isNotNull();
+        assertThat(result).isNonnull();
     }
 
     @Test

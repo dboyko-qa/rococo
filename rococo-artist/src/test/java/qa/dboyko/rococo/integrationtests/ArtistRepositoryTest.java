@@ -93,7 +93,7 @@ class ArtistRepositoryTest {
         entityManager.flush();
 
         // Assert
-        assertThat(savedArtist.getId()).isNotNull();
+        assertThat(savedArtist.getId()).isNonnull();
         assertThat(savedArtist.getId()).isInstanceOf(UUID.class);
     }
 

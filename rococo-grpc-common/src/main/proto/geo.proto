@@ -11,11 +11,16 @@ import "pageinfo.proto";
 
 service GeoService {
     rpc GetCountry (GetCountryRequest) returns (GetCountryResponse);
+    rpc GetCountryByName (GetCountryByNameRequest) returns (GetCountryResponse);
     rpc GetAllCountries (GetAllCountriesRequest) returns (GetAllCountriesResponse);
 }
 
 message GetCountryRequest {
     string id = 1;
+}
+
+message GetCountryByNameRequest {
+    string name = 1;
 }
 
 message GetCountryResponse {
