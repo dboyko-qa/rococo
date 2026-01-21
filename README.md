@@ -16,7 +16,7 @@
 
 Для тестирования используются JUnit 5, Mockito, WireMock, RestAssured и Selenide. Отчеты строятся в Allure.
 
-**Схема проекта Niffler 2.0**
+**Схема проекта Rococo**
 
 <img src="rococo_scheme_dark.png" width="600">
 
@@ -33,7 +33,7 @@ docker pull confluentinc/cp-kafka:7.3.2
 После `pull` вы увидите спуленный image командой `docker images`
 
 ```posh
-mitriis-MacBook-Pro ~ % docker images            
+MacBook-Pro ~ % docker images            
 REPOSITORY                 TAG              IMAGE ID       CREATED         SIZE
 postgres                   15.1             9f3ec01f884d   10 days ago     379MB
 confluentinc/cp-kafka      7.3.2            db97697f6e28   12 months ago   457MB
@@ -52,7 +52,7 @@ docker volume create pgdata
 Запустив скрипт (Для Windows необходимо использовать bash terminal: gitbash, cygwin или wsl)
 
 ```posh
-User-MacBook-Pro  niffler % bash localenv.sh
+User-MacBook-Pro  rococo % bash localenv.sh
 ```
 
 Или выполнив последовательно команды, для *nix:
@@ -145,11 +145,11 @@ User-MacBook-Pro rococo % cd rococo-auth
 User-MacBook-Pro rococo-auth % gradle bootRun --args='--spring.profiles.active=local'
 ```
 
-Или просто перейдя к main-классу приложения NifflerAuthApplication выбрать run в IDEA (предварительно удостовериться что
+Или просто перейдя к main-классу приложения RococoAuthApplication выбрать run в IDEA (предварительно удостовериться что
 выполнен предыдущий пункт)
 
 #### 5  Запустить в любой последовательности другие сервисы: rococo-artist,rococo-geo,rococo-museum,rococo-painting,rococo-userdata
 
-Фронтенд Niffler при запуске локально будет работать для вас по адресу http://127.0.0.1:3000/,
+Фронтенд Rococo при запуске локально будет работать для вас по адресу http://127.0.0.1:3000/,
 
 

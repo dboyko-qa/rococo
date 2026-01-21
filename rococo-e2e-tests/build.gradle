@@ -19,12 +19,6 @@ buildscript {
         wiremockVersion = '3.12.1'
         fakerVersion = '1.0.2'
         ashotVersion = '1.5.4'
-        userdataWsdlUrl = System.getProperty("test.env") == "docker"
-                ? "http://userdata.niffler.dc:8089/ws/userdata.wsdl"
-                : "http://127.0.0.1:8089/ws/userdata.wsdl"
-        gatewayIntrospectionUrl = System.getProperty("test.env") == "docker"
-                ? "http://gateway.niffler.dc:8090/graphql"
-                : "http://127.0.0.1:8090/graphql"
     }
 }
 
@@ -56,9 +50,6 @@ dependencies {
     implementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
     // REST
     implementation "io.rest-assured:rest-assured:${restassuredVersion}"
-//    implementation "com.squareup.okhttp3:logging-interceptor:${okhttp3Version}"
-//    implementation "com.squareup.okhttp3:okhttp-urlconnection:${okhttp3Version}"
-//    implementation "com.squareup.okhttp3:okhttp:${okhttp3Version}"
     implementation "org.springframework.data:spring-data-commons:${springDataCommonsVersion}"
     // DB
     implementation "org.springframework:spring-jdbc:${springJdbcVersion}"
@@ -78,7 +69,6 @@ dependencies {
         exclude group: 'com.codeborne'
     }
     implementation "io.qameta.allure:allure-rest-assured:${allureVersion}"
-//    implementation "io.qameta.allure:allure-okhttp3:${allureVersion}"
     implementation "io.qameta.allure:allure-grpc:${allureVersion}"
     // WEB
     implementation "com.codeborne:selenide:${selenideVersion}"
@@ -87,8 +77,6 @@ dependencies {
     implementation("com.github.javafaker:javafaker:${fakerVersion}")
     implementation 'commons-io:commons-io:2.19.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
-//    testImplementation 'com.github.vertical-blank:sql-formatter:2.0.5'
-//    testImplementation 'com.github.h-thurow:simple-jndi:0.24.0'
 //    // gRPC
     implementation "io.grpc:grpc-api:${project.ext.grpcVersion}"
     implementation "io.grpc:grpc-stub:${project.ext.grpcVersion}"
@@ -100,10 +88,6 @@ dependencies {
     implementation 'org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.600'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.19.4'
 
-//    // Kafka
-//    testImplementation "org.apache.kafka:kafka-clients:${kafkaClientsVersion}"
-//    // Wiremock
-//    testImplementation "org.wiremock:wiremock:${project.ext.wiremockVersion}"
     // Lombok
     annotationProcessor "org.projectlombok:lombok:${project.ext.lombokVersion}"
     compileOnly "org.projectlombok:lombok:${project.ext.lombokVersion}"
