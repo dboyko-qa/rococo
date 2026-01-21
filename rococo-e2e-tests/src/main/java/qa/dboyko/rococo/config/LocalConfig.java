@@ -50,7 +50,7 @@ enum LocalConfig implements Config {
     @Nonnull
     @Override
     public String artistUrl() {
-        return "http://127.0.0.1:8093";
+        return "http://127.0.0.1:8074";
     }
 
     @Nonnull

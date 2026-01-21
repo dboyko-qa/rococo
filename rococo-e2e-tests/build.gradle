@@ -1,0 +1,134 @@
+buildscript {
+    ext {
+        junitVersion = '5.14.1'
+        allureVersion = '2.31.0'
+        selenideVersion = '7.9.3'
+        okhttp3Version = '4.12.0'
+        restassuredVersion = '5.5.6'
+        apollographqlVersion = '0.0.2'
+        logbackVersion = '1.4.11'
+        slf4jVersion = '2.0.9'
+        springJdbcVersion = '6.2.6'
+        springCryptoVersion = '6.4.5'
+        p6spyVersion = '3.9.1'
+        hibernateVersion = '6.6.13.Final'
+        kafkaClientsVersion = '4.0.0'
+        saajVersion = '3.0.4'
+        springDataCommonsVersion = '3.4.4'
+        atomicosVersion = '6.0.0'
+        wiremockVersion = '3.12.1'
+        fakerVersion = '1.0.2'
+        ashotVersion = '1.5.4'
+        userdataWsdlUrl = System.getProperty("test.env") == "docker"
+                ? "http://userdata.niffler.dc:8089/ws/userdata.wsdl"
+                : "http://127.0.0.1:8089/ws/userdata.wsdl"
+        gatewayIntrospectionUrl = System.getProperty("test.env") == "docker"
+                ? "http://gateway.niffler.dc:8090/graphql"
+                : "http://127.0.0.1:8090/graphql"
+    }
+}
+
+plugins {
+    id 'io.qameta.allure' version '3.0.1'
+}
+
+
+group = 'qa.dboyko'
+version = '0.0.1'
+
+allure {
+    version.set("${allureVersion}")
+    adapter {
+        aspectjVersion.set("1.9.22")
+        aspectjWeaver.set(true)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Logs
+    testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    // JUnit
+    implementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+    // REST
+    implementation "io.rest-assured:rest-assured:${restassuredVersion}"
+//    implementation "com.squareup.okhttp3:logging-interceptor:${okhttp3Version}"
+//    implementation "com.squareup.okhttp3:okhttp-urlconnection:${okhttp3Version}"
+//    implementation "com.squareup.okhttp3:okhttp:${okhttp3Version}"
+    implementation "org.springframework.data:spring-data-commons:${springDataCommonsVersion}"
+    // DB
+    implementation "org.springframework:spring-jdbc:${springJdbcVersion}"
+    implementation "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
+    implementation "com.atomikos:transactions-jta:${atomicosVersion}:jakarta"
+    implementation "com.atomikos:transactions-hibernate4:${atomicosVersion}:jakarta"
+    implementation "com.atomikos:transactions-jdbc:${atomicosVersion}"
+    implementation "p6spy:p6spy:${p6spyVersion}"
+    implementation "org.hibernate:hibernate-core:${hibernateVersion}"
+    implementation "org.springframework.security:spring-security-crypto:${springCryptoVersion}"
+    // Allure
+    implementation "io.qameta.allure:allure-attachments:${allureVersion}"
+    implementation("io.qameta.allure:allure-junit5:${allureVersion}") {
+        exclude group: "org.junit.jupiter"
+    }
+    implementation("io.qameta.allure:allure-selenide:${allureVersion}") {
+        exclude group: 'com.codeborne'
+    }
+    implementation "io.qameta.allure:allure-rest-assured:${allureVersion}"
+//    implementation "io.qameta.allure:allure-okhttp3:${allureVersion}"
+    implementation "io.qameta.allure:allure-grpc:${allureVersion}"
+    // WEB
+    implementation "com.codeborne:selenide:${selenideVersion}"
+    // Utils
+//    testImplementation "ru.yandex.qatools.ashot:ashot:${ashotVersion}"
+    implementation("com.github.javafaker:javafaker:${fakerVersion}")
+    implementation 'commons-io:commons-io:2.19.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
+//    testImplementation 'com.github.vertical-blank:sql-formatter:2.0.5'
+//    testImplementation 'com.github.h-thurow:simple-jndi:0.24.0'
+//    // gRPC
+    implementation "io.grpc:grpc-api:${project.ext.grpcVersion}"
+    implementation "io.grpc:grpc-stub:${project.ext.grpcVersion}"
+    implementation "io.grpc:grpc-netty-shaded:${project.ext.grpcVersion}"
+    implementation "com.google.protobuf:protobuf-java:${project.ext.protobufVersion}"
+    implementation "com.google.protobuf:protobuf-java-util:${project.ext.protobufVersion}"
+    implementation project(':rococo-grpc-common')
+    implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1' // Java 9+ compatibility - Do NOT update to 2.0.0
+    implementation 'org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.600'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.19.4'
+
+//    // Kafka
+//    testImplementation "org.apache.kafka:kafka-clients:${kafkaClientsVersion}"
+//    // Wiremock
+//    testImplementation "org.wiremock:wiremock:${project.ext.wiremockVersion}"
+    // Lombok
+    annotationProcessor "org.projectlombok:lombok:${project.ext.lombokVersion}"
+    compileOnly "org.projectlombok:lombok:${project.ext.lombokVersion}"
+
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.register('printVersion') {
+    doLast {
+        println project.version
+    }
+}
+
+test {
+    options {
+        systemProperties(System.getProperties())
+    }
+
+    systemProperty "test.env", findProperty("test.env")
+    systemProperty "registration.password", findProperty("registration.password")
+
+    testLogging.showStandardStreams = true
+    testLogging.exceptionFormat = 'full'
+    useJUnitPlatform()
+}

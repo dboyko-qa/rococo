@@ -13,7 +13,7 @@ import qa.dboyko.rococo.extensions.annotations.ApiLogin;
 import qa.dboyko.rococo.extensions.annotations.Token;
 import qa.dboyko.rococo.model.TestData;
 import qa.dboyko.rococo.model.UserdataJson;
-import qa.dboyko.rococo.pageObjects.MainPage;
+import qa.dboyko.rococo.pages.MainPage;
 
 @NonNullByDefault
 public class ApiLoginExtension implements BeforeTestExecutionCallback, ParameterResolver {
@@ -84,8 +84,8 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().isAssignableFrom(String.class)
-                && AnnotationSupport.isAnnotated(parameterContext.getParameter(), Token.class);
+        return parameterContext.getParameter().getType().equals(String.class)
+                && parameterContext.isAnnotated(Token.class);
     }
 
     @Override

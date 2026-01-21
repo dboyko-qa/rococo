@@ -7,7 +7,7 @@ import qa.dboyko.rococo.extensions.annotations.ApiLogin;
 import qa.dboyko.rococo.extensions.annotations.User;
 import qa.dboyko.rococo.extensions.annotations.meta.WebTest;
 import qa.dboyko.rococo.model.UserdataJson;
-import qa.dboyko.rococo.pageObjects.MainPage;
+import qa.dboyko.rococo.pages.MainPage;
 
 @WebTest
 public class UserPageTest {

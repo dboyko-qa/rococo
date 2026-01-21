@@ -18,7 +18,6 @@ public enum Country {
         this.name = name;
     }
 
-
     public static Country getRandomCountry() {
         return Country.values()[ThreadLocalRandom.current().nextInt(Country.values().length)];
     }

@@ -7,8 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import qa.boyko.rococo.util.GrpcPagination;
 import qa.dboyko.rococo.entity.ArtistEntity;
 import qa.dboyko.rococo.ex.ArtistNotFoundException;
 import qa.dboyko.rococo.mapper.ArtistGrpcMapper;
@@ -47,23 +48,23 @@ public class ArtistService extends ArtistServiceGrpc.ArtistServiceImplBase {
     @Override
     public void allArtists(AllArtistsRequest request, StreamObserver<ArtistsResponse> responseObserver) {
         Page<ArtistEntity> allArtistsPage;
-        final PageInfo pageInfo = request.getPageInfo();
+
+        Pageable pageable;
+        PageInfo pageInfo = request.getPageInfo();
+
+        if (pageInfo.getSize() > 0) {
+            pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
+        } else {
+            pageable = Pageable.unpaged();
+        }
+
         if (request.hasNameFilter()) {
             allArtistsPage = artistRepository.findAllByNameContainsIgnoreCase(
                     request.getNameFilter(),
-                    new GrpcPagination(
-                            pageInfo.getPage(),
-                            pageInfo.getSize()
-                    ).pageable()
+                    pageable
             );
-        }
-        else {
-            allArtistsPage = artistRepository.findAll(
-                    new GrpcPagination(
-                            pageInfo.getPage(),
-                            pageInfo.getSize()
-                    ).pageable()
-            );
+        } else {
+            allArtistsPage = artistRepository.findAll(pageable);
         }
 
         responseObserver.onNext(

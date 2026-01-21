@@ -1,0 +1,47 @@
+package qa.dboyko.rococo.api.gateway;
+
+import com.dboyko.rococo.grpc.PageInfo;
+import io.restassured.http.ContentType;
+import io.restassured.http.Header;
+import io.restassured.http.Headers;
+import io.restassured.response.Response;
+import jakarta.annotation.Nullable;
+import qa.dboyko.rococo.config.Config;
+import qa.dboyko.rococo.model.PaintingJson;
+
+import java.util.Map;
+
+import static qa.dboyko.rococo.api.gateway.ApiBase.getAuthHeaders;
+
+public class PaintingApi {
+
+    private final Config CFG = Config.getInstance();
+    private final ApiBase apiBase = new ApiBase.EmptyApiBase(
+            CFG.gatewayUrl() + EndPoints.paintingUrl,
+            ContentType.JSON);
+
+    public Response createPainting(PaintingJson paintingJson, @Nullable String token) {
+        return apiBase.postCall("",
+                new Headers(new Header("Authorization", token)),
+                paintingJson);
+    }
+
+    public Response updatePainting(PaintingJson paintingJson, @Nullable String token) {
+        return apiBase.patchCall("",
+                new Headers(new Header("Authorization", token)),
+                paintingJson);
+    }
+
+    public Response getAllPaintings(Integer page, Integer size, @Nullable String token) {
+        return apiBase.getCall("",
+                Map.of("page", page.toString(), "size", size.toString()),
+                getAuthHeaders(token));
+    }
+
+    public Response getAllPaintings(PageInfo pageInfo, @Nullable String token) {
+        return getAllPaintings(pageInfo.getPage(), pageInfo.getSize(), token);
+    }
+
+
+
+}

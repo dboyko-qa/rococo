@@ -1,8 +1,8 @@
 package qa.dboyko.rococo.entity;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 

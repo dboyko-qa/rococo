@@ -16,6 +16,7 @@ public abstract class BaseGrpc {
                 .forAddress(hostPort.host(), hostPort.port())
                 .intercept(new GrpcConsoleInterceptor())
                 .usePlaintext()
+                .maxInboundMessageSize(10*1024*1024)
                 .build();
     }
 

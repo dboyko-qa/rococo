@@ -4,6 +4,12 @@ import com.dboyko.rococo.grpc.Museum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
+import qa.dboyko.rococo.model.sitedata.MuseumData;
+
+import static qa.dboyko.rococo.enums.CountryJsonCache.getRandomCountryJson;
+import static qa.dboyko.rococo.utils.ConversionUtils.jpegToString;
+import static qa.dboyko.rococo.utils.RandomDataUtils.*;
+import static qa.dboyko.rococo.utils.RandomDataUtils.randomCity;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record MuseumJson(
@@ -25,6 +31,39 @@ public record MuseumJson(
                 museum.getDescription(),
                 museum.getPhoto(),
                 new GeoJson(museum.getCity(), countryJson)
+        );
+    }
+
+    @Nonnull
+    public static MuseumJson generateRandomMuseumJson() {
+        return new MuseumJson(
+                "",
+                generateMuseumName(),
+                generateDescription(),
+                jpegToString(getRandomMuseumFile().getPath()),
+                new GeoJson(randomCity(), getRandomCountryJson())
+        );
+    }
+
+    @Nonnull
+    public MuseumJson updateJson() {
+        return new MuseumJson(
+                this.id,
+                this.title() + "1",
+                this.description() + "1",
+                jpegToString(getRandomMuseumFile().toString()),
+                new GeoJson(randomCity(), getRandomCountryJson())
+        );
+    }
+
+    @Nonnull
+    public MuseumData toMuseumData(String imageFilePath) {
+        return new MuseumData(
+                this.title,
+                this.description,
+                imageFilePath,
+                this.geo.city(),
+                this.geo.country().name()
         );
     }
 
