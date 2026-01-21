@@ -1,6 +1,7 @@
 package qa.dboyko.rococo.pages.museums;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import qa.dboyko.rococo.model.MuseumJson;
 import qa.dboyko.rococo.model.sitedata.MuseumData;
 import qa.dboyko.rococo.pages.BasePage;
@@ -27,6 +28,7 @@ public class EditMuseumPage extends BasePage<EditMuseumPage> {
     private final SelenideElement submitButton = mainElement.$("button[type='submit']");
     private final SelenideElement closeButton = mainElement.$("button[type='button']");
 
+    @Step("Verify that content of empty Create Museum dialog is correct")
     public EditMuseumPage verifyContentCreateDialog() {
         titleInput.shouldBe(visible, editable);
         titleLabel.shouldBe(visible).shouldHave(text(MUSEUM_TITLE_TEXT));
@@ -43,6 +45,7 @@ public class EditMuseumPage extends BasePage<EditMuseumPage> {
         return this;
     }
 
+    @Step("Verify that content of Edit Museum dialog is correct")
     public EditMuseumPage verifyContentEditDialog(MuseumJson museumJson) {
         titleInput.shouldBe(visible, editable).shouldHave(value(museumJson.title()));
         titleLabel.shouldBe(visible).shouldHave(text(MUSEUM_TITLE_TEXT));
@@ -59,11 +62,13 @@ public class EditMuseumPage extends BasePage<EditMuseumPage> {
         return this;
     }
 
+    @Step("Edit Museum")
     public ViewMuseumPage updateMuseum(MuseumData museumData) {
         addMuseum(museumData);
         return new ViewMuseumPage();
     }
 
+    @Step("Add museum")
     public MainPage addMuseum(MuseumData museumData) {
         enterTitle(museumData.title());
         countrySelect.setOption(museumData.countryName());

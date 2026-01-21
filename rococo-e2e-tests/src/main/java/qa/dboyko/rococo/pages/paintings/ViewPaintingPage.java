@@ -2,6 +2,7 @@ package qa.dboyko.rococo.pages.paintings;
 
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebElementCondition;
+import io.qameta.allure.Step;
 import qa.dboyko.rococo.enums.LoggedUser;
 import qa.dboyko.rococo.model.PaintingJson;
 import qa.dboyko.rococo.pages.BasePage;
@@ -21,6 +22,7 @@ public class ViewPaintingPage extends BasePage<ViewPaintingPage> {
         return $("img[alt=\"%s\"]".formatted(altText));
     }
 
+    @Step("Verify view painting dialog")
     public ViewPaintingPage verifyViewPaintingContent(PaintingJson paintingJson) {
         header.shouldHave(text(paintingJson.title()));
         artist.shouldBe(visible).shouldHave(text(paintingJson.artist().name()));
@@ -29,12 +31,14 @@ public class ViewPaintingPage extends BasePage<ViewPaintingPage> {
         return this;
     }
 
+    @Step("Verify Edit button available or not for user {0}")
     public ViewPaintingPage verifyEditButtonForUser(LoggedUser user) {
         WebElementCondition visibleCondition = user == LoggedUser.USER_LOGGED_IN ? visible : not(visible);
         editButton.shouldBe(visibleCondition);
         return this;
     }
 
+    @Step("Open Edit painting page")
     public EditPaintingPage editPainting() {
         editButton.click();
         return new EditPaintingPage();

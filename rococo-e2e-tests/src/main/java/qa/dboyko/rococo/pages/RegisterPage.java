@@ -1,6 +1,7 @@
 package qa.dboyko.rococo.pages;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -39,6 +40,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
         return this;
     }
 
+    @Step("Register user: {0}")
     public void registerUser(String username, String password) {
         enterUsername(username);
         enterPassword(password);
@@ -46,6 +48,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
         submitButton.click();
     }
 
+    @Step("Verify content of registration page")
     public RegisterPage verifyPageContent() {
         usernameLabel.should(allOf(visible, have(text(USERNAME_LABEL))));
         passwordLabel.should(allOf(visible, have(text(PASSWORD_LABEL))));
@@ -59,6 +62,7 @@ public class RegisterPage extends BasePage<RegisterPage> {
         return this;
     }
 
+    @Step("Verify error for {0} is shown")
     public RegisterPage verifyUsernameError(String username) {
         usernameErrorMessage.should(allOf(visible, have(text(USERS_EXISTS_ERROR.formatted(username)))));
         return this;

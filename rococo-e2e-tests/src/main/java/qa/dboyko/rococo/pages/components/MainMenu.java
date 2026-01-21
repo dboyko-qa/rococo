@@ -1,6 +1,7 @@
 package qa.dboyko.rococo.pages.components;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import qa.dboyko.rococo.pages.LoginPage;
 import qa.dboyko.rococo.pages.constants.LightDarkMode;
 import qa.dboyko.rococo.pages.museums.MuseumsPage;
@@ -23,19 +24,23 @@ public class MainMenu {
     private final SelenideElement lightSwitcher = mainElement.$(".lightswitch-track");
     private final SelenideElement root = $("html");
 
+    @Step("Switch day-night mode")
     public MainMenu switchDayNightMode(LightDarkMode mode) {
         if (!lightSwitcher.attr("title").equals(mode.getSwitcherTitle())) lightSwitcher.click();
         return this;
     }
 
+    @Step("Verify that light mode is enabled")
     public void verifyLightMode() {
         root.shouldHave(attribute("class", ""));
     }
 
+    @Step("Verify that dark mode is enabled")
     public void verifyDarkMode() {
         root.shouldHave(attribute("class", "dark"));
     }
 
+    @Step("Click login button")
     public LoginPage login() {
         loginButton.shouldBe(clickable).click();
         return new LoginPage();
@@ -50,27 +55,32 @@ public class MainMenu {
         }
     }
 
+    @Step("Verify Login button visibility and text")
     public MainMenu verifyLoginButton() {
         loginButton.shouldBe(visible, clickable).shouldHave(text(LOGIN_BUTTON_TEXT));
         return this;
     }
 
+    @Step("Verify avatar for the new user")
     public MainMenu verifyAvatarForNewUser() {
         avatarButton.should(visible);
         newUserText.should(have(text("AB")));
         return this;
     }
 
+    @Step("Verify that avatar button is visible for logged user")
     public MainMenu verifyAvatar() {
         avatarButton.should(visible);
         return this;
     }
 
+    @Step("Open user page")
     public UserPage openUserPage() {
         avatarButton.click();
         return new UserPage();
     }
 
+    @Step("Verify that all buttons in main menu are visible and clickable")
     public MainMenu verifyAllButtonsAvailable() {
         paintingButton.shouldBe(visible, clickable).shouldHave(text(PAINTINGS_HEADER));
         artistButton.shouldBe(visible, clickable).shouldHave(text(ARTISTS_HEADER));
@@ -79,16 +89,19 @@ public class MainMenu {
         return this;
     }
 
+    @Step("Open museums page")
     public MuseumsPage openMuseums() {
         museumButton.click();
         return new MuseumsPage();
     }
 
+    @Step("Open artists page")
     public ArtistsPage openArtists() {
         artistButton.click();
         return new ArtistsPage();
     }
 
+    @Step("Open paintings page")
     public PaintingsPage openPaintings() {
         paintingButton.click();
         return new PaintingsPage();

@@ -3,13 +3,13 @@ package qa.dboyko.rococo.pages;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebElementCondition;
+import io.qameta.allure.Allure;
 import lombok.SneakyThrows;
 import qa.dboyko.rococo.enums.LoggedUser;
 import qa.dboyko.rococo.pages.constants.ContentType;
 
 import java.time.Duration;
 
-import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.clickable;
 import static com.codeborne.selenide.Selenide.*;
@@ -29,6 +29,7 @@ public abstract class ContentBasePage<T extends ContentBasePage<T>> extends Base
     }
 
     public T openItem(String name) {
+        Allure.step("Open %s with name %s".formatted(type.name(), name));
         scrollToLastItem();
         itemByName(name).click();
         return self();
@@ -40,12 +41,14 @@ public abstract class ContentBasePage<T extends ContentBasePage<T>> extends Base
     }
 
     public T verifyAddButtonVisibility(LoggedUser user) {
+        Allure.step("Verify Add button visibilier for %s on page %s".formatted(user, type.getTextHeader()));
         WebElementCondition condition = user == LoggedUser.USER_LOGGED_IN ? visible : not(visible);
         addButton().shouldBe(condition);
         return self();
     }
 
     public T verifyMainContent() {
+        Allure.step("Verify main content of the page" + type.getTextHeader());
         header2.shouldBe(visible).shouldHave(text(type.getTextHeader()));
         searchInput.shouldBe(visible);
         searchButton.shouldBe(visible, clickable);
@@ -53,12 +56,8 @@ public abstract class ContentBasePage<T extends ContentBasePage<T>> extends Base
         return self();
     }
 
-    public T verifyGridNotEmpty() {
-        items.shouldHave(sizeGreaterThan(0));
-        return (T) this;
-    }
-
     public T findItem(String name) {
+        Allure.step("Find %s with name %s".formatted(type.name().toLowerCase(), name));
         searchInput.setValue(name);
         searchButton.click();
         return (T) this;
@@ -85,6 +84,7 @@ public abstract class ContentBasePage<T extends ContentBasePage<T>> extends Base
     }
 
     public T verifyItemInList(String name) {
+        Allure.step("Verify %s with name %s is in the list".formatted(type.name().toLowerCase(), name));
         scrollToLastItem();
         itemByName(name).shouldBe(visible);
         return (T) this;

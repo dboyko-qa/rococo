@@ -1,6 +1,7 @@
 package qa.dboyko.rococo.pages.artists;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import qa.dboyko.rococo.model.ArtistJson;
 import qa.dboyko.rococo.model.sitedata.ArtistData;
 import qa.dboyko.rococo.pages.BasePage;
@@ -26,6 +27,7 @@ public class EditArtistPage extends BasePage<EditArtistPage> {
     private final SelenideElement submitButton = mainElement.$("button[type='submit']");
     private final SelenideElement closeButton = mainElement.$("button[type='button']");
 
+    @Step("Verify that content of Edit Artist dialog is correct")
     public EditArtistPage verifyContentEditDialog(ArtistJson artistJson) {
         header.shouldBe(visible).shouldHave(text(EDIT_ARTIST_TEXT));
         nameInput.shouldBe(visible, editable).shouldHave(value(artistJson.name()));
@@ -39,6 +41,7 @@ public class EditArtistPage extends BasePage<EditArtistPage> {
         return this;
     }
 
+    @Step("Verify that content of empty Add Artist dialog is correct")
     public EditArtistPage verifyContentCreateDialog() {
         nameInput.shouldBe(visible, editable);
         nameLabel.shouldBe(visible).shouldHave(text(ARTIST_NAME_TEXT));
@@ -51,11 +54,13 @@ public class EditArtistPage extends BasePage<EditArtistPage> {
         return this;
     }
 
+    @Step("Update artist")
     public ViewArtistPage updateArtist(ArtistData artistData) {
         addArtist(artistData);
         return new ViewArtistPage();
     }
 
+    @Step("Add artist")
     public ArtistsPage addArtist(ArtistData artistData) {
         nameInput.setValue(artistData.name());
         photoInput.setValue(artistData.photoFilePath());

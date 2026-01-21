@@ -1,6 +1,7 @@
 package qa.dboyko.rococo.pages;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import qa.dboyko.rococo.model.UserdataJson;
 
 import static com.codeborne.selenide.Condition.*;
@@ -22,11 +23,13 @@ public class UserPage extends BasePage<UserPage> {
     private final SelenideElement surnameLabel = mainElement.$x("//input[@name='surname']/preceding-sibling::span");
     private final SelenideElement header = mainElement.$("header");
 
+    @Step("Verify that user {0} is logged")
     public UserPage verifyLoggedUser(String username) {
         usernameElement.shouldHave(text(username));
         return this;
     }
 
+    @Step("Verify content of user page")
     public UserPage verifyContent(UserdataJson user) {
         header.shouldHave(text(HEADER)).shouldBe(visible);
         logoutButton.shouldBe(visible).shouldHave(text(LOGOUT_BUTTON_TEXT));

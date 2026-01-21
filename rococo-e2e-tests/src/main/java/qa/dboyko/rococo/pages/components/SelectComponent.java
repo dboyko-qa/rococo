@@ -3,6 +3,7 @@ package qa.dboyko.rococo.pages.components;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.time.Duration;
@@ -33,6 +34,7 @@ public class SelectComponent {
         return $x(itemLocator.formatted(countryName));
     }
 
+    @Step("Verify that option {0} is selected")
     public SelectComponent selected(String optionSelected) {
         scrollToLastItem();
         itemElement(optionSelected).shouldHave(cssValue("background-color", "rgba(230, 200, 51, 1)"));
@@ -40,23 +42,27 @@ public class SelectComponent {
         return this;
     }
 
+    @Step("Select option {0}")
     public SelectComponent setOption(String option) {
         scrollToLastItem();
         itemElement(option).scrollIntoView(true).click();
         return this;
     }
 
+    @Step("Verify that all options are in the list")
     public SelectComponent verifyOptions(List<String> expected) {
         scrollToLastItem();
         getItems().shouldHave(CollectionCondition.exactTextsCaseSensitiveInAnyOrder(expected));
         return this;
     }
 
+    @Step("Verify component is visible")
     public SelectComponent visible() {
         base.shouldBe(visible);
         return this;
     }
 
+    @Step("Scroll to the end of the list")
     public SelectComponent scrollToLastItem() {
 
         int previousSize = 0;
