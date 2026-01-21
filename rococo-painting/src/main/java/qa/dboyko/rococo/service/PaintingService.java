@@ -7,8 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import qa.boyko.rococo.util.GrpcPagination;
 import qa.dboyko.rococo.entity.PaintingEntity;
 import qa.dboyko.rococo.ex.PaintingNotFoundException;
 import qa.dboyko.rococo.mapper.PaintingGrpcMapper;
@@ -51,22 +52,22 @@ public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase
     public void allPaintings(AllPaintingsRequest request, StreamObserver<PaintingsResponse> responseObserver) {
         LOG.info("Received getAllPaintings request");
         Page<PaintingEntity> allPaintingsPage;
-        final PageInfo pageInfo = request.getPageInfo();
+        Pageable pageable;
+        PageInfo pageInfo = request.getPageInfo();
+
+        if (pageInfo.getSize() > 0) {
+            pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
+        } else {
+            pageable = Pageable.unpaged();
+        }
+
         if (request.hasTitleFilter()) {
             allPaintingsPage = paintingRepository.findAllByTitleContainsIgnoreCase(
                     request.getTitleFilter(),
-                    new GrpcPagination(
-                            pageInfo.getPage(),
-                            pageInfo.getSize()
-                    ).pageable()
+                    pageable
             );
         } else {
-            allPaintingsPage = paintingRepository.findAll(
-                    new GrpcPagination(
-                            pageInfo.getPage(),
-                            pageInfo.getSize()
-                    ).pageable()
-            );
+            allPaintingsPage = paintingRepository.findAll(pageable);
         }
 
         responseObserver.onNext(
@@ -83,13 +84,17 @@ public class PaintingService extends PaintingServiceGrpc.PaintingServiceImplBase
     public void getPaintingsForArtist(GetPaintingsForArtistRequest request, StreamObserver<PaintingsResponse> responseObserver) {
         LOG.info("Received getPaintings request for artist: {}", request.getArtistId());
         Page<PaintingEntity> allPaintingsPage;
-        final PageInfo pageInfo = request.getPageInfo();
+        Pageable pageable;
+        PageInfo pageInfo = request.getPageInfo();
+
+        if (pageInfo.getSize() > 0) {
+            pageable = PageRequest.of(pageInfo.getPage(), pageInfo.getSize());
+        } else {
+            pageable = Pageable.unpaged();
+        }
         allPaintingsPage = paintingRepository.findAllByArtistId(
                 UUID.fromString(request.getArtistId()),
-                new GrpcPagination(
-                        pageInfo.getPage(),
-                        pageInfo.getSize()
-                ).pageable());
+                pageable);
 
 
         responseObserver.onNext(

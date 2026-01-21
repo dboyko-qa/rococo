@@ -9,6 +9,6 @@ import qa.dboyko.rococo.api.core.ThreadSafeCookieFilter;
 public class CookieStoreExtension implements AfterTestExecutionCallback {
   @Override
   public void afterTestExecution(ExtensionContext context) throws Exception {
-      ThreadSafeCookieFilter.INSTANCE.clear();
+      ThreadSafeCookieFilter.INSTANCE.get().getCookieStore().clear();
   }
 }

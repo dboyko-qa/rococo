@@ -1,7 +1,7 @@
 package qa.dboyko.rococo.apiservice;
 
-import qa.dboyko.rococo.api.AuthApi;
-import qa.dboyko.rococo.api.ResponseSpecifications;
+import qa.dboyko.rococo.api.gateway.AuthApi;
+import qa.dboyko.rococo.api.gateway.ResponseSpecifications;
 import qa.dboyko.rococo.model.UserdataJson;
 
 public class UserClient {

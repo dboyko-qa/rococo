@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -28,13 +29,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorJson> handleGrpcException(@Nonnull RuntimeException ex,
                                                          @Nonnull HttpServletRequest request) {
         LOG.warn("### Resolve Exception in @RestControllerAdvice ", ex);
-        return withStatus("Bad request", HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+        return withStatus("Bad request", HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     private @Nonnull ResponseEntity<ErrorJson> withStatus(@Nonnull String type,
                                                           @Nonnull HttpStatus status,
-                                                          @Nonnull String message,
-                                                          @Nonnull HttpServletRequest request) {
+                                                          @Nonnull String message) {
         return ResponseEntity
                 .status(status)
                 .body(new ErrorJson(
@@ -43,5 +43,30 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         List.of(message)
                 ));
     }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            @Nonnull org.springframework.http.HttpHeaders headers,
+            @Nonnull org.springframework.http.HttpStatusCode status,
+            @Nonnull org.springframework.web.context.request.WebRequest request
+    ) {
+
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation error");
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorJson(
+                        new Date(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        List.of(message)
+                ));
+    }
+
 
 }

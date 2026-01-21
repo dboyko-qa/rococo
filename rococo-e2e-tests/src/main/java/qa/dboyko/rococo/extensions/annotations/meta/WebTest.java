@@ -2,10 +2,7 @@ package qa.dboyko.rococo.extensions.annotations.meta;
 
 import io.qameta.allure.junit5.AllureJunit5;
 import org.junit.jupiter.api.extension.ExtendWith;
-import qa.dboyko.rococo.extensions.ApiLoginExtension;
-import qa.dboyko.rococo.extensions.BrowserExtension;
-import qa.dboyko.rococo.extensions.MuseumExtension;
-import qa.dboyko.rococo.extensions.UserExtension;
+import qa.dboyko.rococo.extensions.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,7 +16,9 @@ import java.lang.annotation.Target;
         AllureJunit5.class,
         UserExtension.class,
         ApiLoginExtension.class,
-        MuseumExtension.class
+        MuseumExtension.class,
+        ArtistExtension.class,
+        PaintingExtension.class,
 })
 public @interface WebTest {
 }

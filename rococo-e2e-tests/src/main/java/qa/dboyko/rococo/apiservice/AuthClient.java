@@ -2,7 +2,7 @@ package qa.dboyko.rococo.apiservice;
 
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
-import qa.dboyko.rococo.api.AuthApi;
+import qa.dboyko.rococo.api.gateway.AuthApi;
 import qa.dboyko.rococo.api.core.ThreadSafeCookieFilter;
 import qa.dboyko.rococo.config.Config;
 import qa.dboyko.rococo.extensions.ApiLoginExtension;

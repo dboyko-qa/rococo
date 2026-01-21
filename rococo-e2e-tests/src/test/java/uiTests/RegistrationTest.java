@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import qa.dboyko.rococo.extensions.annotations.User;
 import qa.dboyko.rococo.extensions.annotations.meta.WebTest;
 import qa.dboyko.rococo.model.UserdataJson;
-import qa.dboyko.rococo.pageObjects.MainPage;
-import qa.dboyko.rococo.pageObjects.RegisterPage;
+import qa.dboyko.rococo.pages.MainPage;
+import qa.dboyko.rococo.pages.RegisterPage;
 import qa.dboyko.rococo.utils.RandomDataUtils;
 
 import static qa.dboyko.rococo.extensions.UserExtension.DEFAULT_PASSWORD;

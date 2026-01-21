@@ -7,11 +7,11 @@ import qa.dboyko.rococo.config.Config;
 import qa.dboyko.rococo.extensions.annotations.User;
 import qa.dboyko.rococo.extensions.annotations.meta.WebTest;
 import qa.dboyko.rococo.model.UserdataJson;
-import qa.dboyko.rococo.pageObjects.LoginPage;
-import qa.dboyko.rococo.pageObjects.MainPage;
+import qa.dboyko.rococo.pages.LoginPage;
+import qa.dboyko.rococo.pages.MainPage;
 import qa.dboyko.rococo.utils.RandomDataUtils;
 
-import static qa.dboyko.rococo.pageObjects.constants.TextConstants.BAD_CREDENTIALS;
+import static qa.dboyko.rococo.pages.constants.TextConstants.BAD_CREDENTIALS;
 
 @WebTest
 @DisplayName("UI tests: user login")

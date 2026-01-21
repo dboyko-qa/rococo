@@ -5,11 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import qa.dboyko.rococo.extensions.annotations.ApiLogin;
 import qa.dboyko.rococo.extensions.annotations.Museum;
+import qa.dboyko.rococo.extensions.annotations.TestMuseum;
 import qa.dboyko.rococo.extensions.annotations.User;
 import qa.dboyko.rococo.extensions.annotations.meta.WebTest;
 import qa.dboyko.rococo.model.MuseumJson;
-import qa.dboyko.rococo.pageObjects.MainPage;
-import qa.dboyko.rococo.pageObjects.MuseumsPage;
+import qa.dboyko.rococo.pages.MainPage;
+import qa.dboyko.rococo.pages.museums.MuseumsPage;
 
 import static qa.dboyko.rococo.enums.LoggedUser.GUEST;
 import static qa.dboyko.rococo.enums.LoggedUser.USER_LOGGED_IN;
@@ -28,7 +29,7 @@ public class MuseumsTest {
     @Test
     @Museum
     @DisplayName("Museums should be visible for guest")
-    void verifyMuseumVisible(MuseumJson museumJson) {
+    void verifyMuseumVisible(@TestMuseum MuseumJson museumJson) {
         Selenide.open(MuseumsPage.url, MuseumsPage.class)
                 .scrollToLastItem()
                 .verifyItemInList(museumJson.title())
@@ -44,7 +45,7 @@ public class MuseumsTest {
     @User(username = "user")
     @ApiLogin
     @DisplayName("Museums should be visible and editable for logged user")
-    void verifyMuseumVisibleForUser(MuseumJson museumJson) {
+    void verifyMuseumVisibleForUser(@TestMuseum MuseumJson museumJson) {
         new MainPage().openMuseums()
                 .scrollToLastItem()
                 .verifyItemInList(museumJson.title())

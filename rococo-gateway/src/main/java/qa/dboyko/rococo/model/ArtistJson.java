@@ -22,7 +22,10 @@ public record ArtistJson(
     String biography,
     @JsonProperty("photo")
     @IsPhotoString
-    @Size(max = RococoGatewayServiceConfig.ONE_MB)
+    @Size(
+            max = RococoGatewayServiceConfig.ONE_MB,
+            message = "Photo size must not exceed 1 MB"
+    )
     String photo
 
 ) {

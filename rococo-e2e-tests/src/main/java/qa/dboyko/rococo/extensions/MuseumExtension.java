@@ -3,9 +3,10 @@ package qa.dboyko.rococo.extensions;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.springframework.data.domain.Page;
-import qa.dboyko.rococo.apiservice.GeoClient;
-import qa.dboyko.rococo.apiservice.MuseumClient;
+import qa.dboyko.rococo.apiservice.grpc.GeoGrpcClient;
+import qa.dboyko.rococo.apiservice.grpc.MuseumGrpcClient;
 import qa.dboyko.rococo.extensions.annotations.Museum;
+import qa.dboyko.rococo.extensions.annotations.TestMuseum;
 import qa.dboyko.rococo.model.GeoJson;
 import qa.dboyko.rococo.model.MuseumJson;
 
@@ -20,8 +21,8 @@ public class MuseumExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(MuseumExtension.class);
 
-    private final MuseumClient museumClient = new MuseumClient();
-    private final GeoClient geoClient = new GeoClient();
+    private final MuseumGrpcClient museumGrpcClient = new MuseumGrpcClient();
+    private final GeoGrpcClient geoGrpcClient = new GeoGrpcClient();
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
@@ -30,7 +31,7 @@ public class MuseumExtension implements BeforeEachCallback, ParameterResolver {
                             Page<MuseumJson> allMuseums = Page.empty();
                             MuseumJson resultMuseum = null;
                             if (!museumAnno.createNew()) {
-                                allMuseums = museumClient.allMuseums(null, null);
+                                allMuseums = museumGrpcClient.allMuseums(null, null);
                                 if (allMuseums.getSize() > 0) {
                                     resultMuseum = allMuseums.get().findFirst().get();
                                 }
@@ -50,12 +51,12 @@ public class MuseumExtension implements BeforeEachCallback, ParameterResolver {
                                         : museumAnno.description();
 
                                 MuseumJson museum = new MuseumJson(
-                                        null,
+                                        "",
                                         museumName,
                                         description,
                                         jpegToString(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/museums/louvre.jpg")).getPath()),
-                                        new GeoJson(city, geoClient.getCountryByName(country)));
-                                resultMuseum = museumClient.createMuseum(museum);
+                                        new GeoJson(city, geoGrpcClient.getCountryByName(country)));
+                                resultMuseum = museumGrpcClient.createMuseum(museum);
                             }
 
                             context.getStore(NAMESPACE).put(
@@ -71,7 +72,8 @@ public class MuseumExtension implements BeforeEachCallback, ParameterResolver {
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws
             ParameterResolutionException {
-        return parameterContext.getParameter().getType().isAssignableFrom(MuseumJson.class);
+        return parameterContext.getParameter().getType().equals(MuseumJson.class)
+                && parameterContext.isAnnotated(TestMuseum.class);
     }
 
     @Override

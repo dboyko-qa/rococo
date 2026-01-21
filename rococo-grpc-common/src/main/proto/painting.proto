@@ -20,10 +20,8 @@ message CreatePaintingRequest {
     string title = 1;
     optional string description = 2;
     optional string content = 3;
-    optional string city = 4;
-    optional string country_id = 5;
-    string museum_id = 6;
-    string artist_id = 7;
+    string museum_id = 4;
+    string artist_id = 5;
 }
 
 message CreatePaintingResponse {
