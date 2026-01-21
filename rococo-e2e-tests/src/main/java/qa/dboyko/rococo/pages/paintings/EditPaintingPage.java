@@ -1,6 +1,7 @@
 package qa.dboyko.rococo.pages.paintings;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import qa.dboyko.rococo.apiservice.grpc.ArtistGrpcClient;
 import qa.dboyko.rococo.apiservice.grpc.MuseumGrpcClient;
 import qa.dboyko.rococo.model.PaintingJson;
@@ -38,6 +39,7 @@ public class EditPaintingPage extends BasePage<EditPaintingPage> {
     private final SelenideElement submitButton = mainElement.$("button[type='submit']");
     private final SelenideElement closeButton = mainElement.$("button[type='button']");
 
+    @Step("Verify content of empty Create Painting dialog")
     public EditPaintingPage verifyContentCreateDialog() {
         titleInput.shouldBe(visible, editable);
         titleLabel.shouldBe(visible).shouldHave(text(PAINTING_TITLE_TEXT));
@@ -54,6 +56,7 @@ public class EditPaintingPage extends BasePage<EditPaintingPage> {
         return this;
     }
 
+    @Step("Verify content of Edit Painting dialog")
     public EditPaintingPage verifyContentEditDialog(PaintingJson paintingJson) {
         header.shouldBe(visible).shouldHave(text(PAINTING_EDIT_HEADER_TEXT));
         image.shouldHave(attribute("src", paintingJson.content()));
@@ -72,12 +75,13 @@ public class EditPaintingPage extends BasePage<EditPaintingPage> {
         return this;
     }
 
+    @Step("Edit painting")
     public ViewPaintingPage updatePainting(PaintingData paintingData) {
         addPainting(paintingData);
         return new ViewPaintingPage();
     }
 
-    public void addPainting(PaintingData paintingData, boolean forArtist) {
+    private void addPainting(PaintingData paintingData, boolean forArtist) {
         photoInput.setValue(paintingData.photoFilePath());
         titleInput.setValue(paintingData.title());
         if (!forArtist) artistSelect.setOption(paintingData.artistName());
@@ -86,11 +90,13 @@ public class EditPaintingPage extends BasePage<EditPaintingPage> {
         submitButton.click();
     }
 
+    @Step("Add painting")
     public MainPage addPainting(PaintingData paintingData) {
         addPainting(paintingData, false);
         return new MainPage();
     }
 
+    @Step("Add painting for artist")
     public EditArtistPage addPaintingForArtist(PaintingData paintingData) {
         addPainting(paintingData, true);
         return new EditArtistPage();

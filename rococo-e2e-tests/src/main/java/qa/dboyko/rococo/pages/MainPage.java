@@ -1,6 +1,7 @@
 package qa.dboyko.rococo.pages;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -18,6 +19,7 @@ public class MainPage extends BasePage<MainPage> {
     private final SelenideElement artistBannerCaption = artistBanner.$("div");
     private final SelenideElement museumBannerCaption = museumBanner.$("div");
 
+    @Step("Verify content of the main page")
     public MainPage verifyContent() {
         header.shouldBe(visible).shouldHave(text(MAIN_PAGE_HEADER));
         paintingBanner.shouldBe(visible, clickable);

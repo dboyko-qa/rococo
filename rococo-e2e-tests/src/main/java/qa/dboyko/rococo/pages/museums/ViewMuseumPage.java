@@ -2,6 +2,7 @@ package qa.dboyko.rococo.pages.museums;
 
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebElementCondition;
+import io.qameta.allure.Step;
 import qa.dboyko.rococo.enums.LoggedUser;
 import qa.dboyko.rococo.model.MuseumJson;
 import qa.dboyko.rococo.pages.BasePage;
@@ -22,6 +23,7 @@ public class ViewMuseumPage extends BasePage<ViewMuseumPage> {
         return $("img[alt=\"%s\"]".formatted(altText));
     }
 
+    @Step("Verify content of View Museum page")
     public ViewMuseumPage verifyViewMuseumContent(MuseumJson museum) {
         header.shouldHave(text(museum.title()));
         address.shouldHave(text(museum.geo().country().name() + ", " + museum.geo().city()));
@@ -30,12 +32,14 @@ public class ViewMuseumPage extends BasePage<ViewMuseumPage> {
         return this;
     }
 
+    @Step("Verify Edit button availability or not for the user {0}")
     public ViewMuseumPage verifyEditButtonForUser(LoggedUser user) {
         WebElementCondition visibleCondition = user == LoggedUser.USER_LOGGED_IN ? visible : not(visible);
         editButton.shouldBe(visibleCondition);
         return this;
     }
 
+    @Step("Open Edit museum page")
     public EditMuseumPage editMuseum() {
         editButton.click();
         return new EditMuseumPage();
