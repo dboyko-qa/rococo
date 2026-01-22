@@ -17,9 +17,11 @@ import qa.dboyko.rococo.model.PaintingJson;
 
 import java.util.stream.Stream;
 
+import static qa.dboyko.rococo.api.constants.ApiErrorMessages.INVALID_UUID;
 import static qa.dboyko.rococo.utils.RandomDataUtils.*;
 
 @RestTest
+@DisplayName("API tests: painting api")
 public class PaintingTest {
 
     @RegisterExtension
@@ -30,14 +32,26 @@ public class PaintingTest {
     private PaintingClient paintingClient = new PaintingClient();
 
     @Test
+    @DisplayName("Verify error with invalid painting id")
+    void verifyGetRequestWithInvalidId() {
+        paintingClient.getPaintung("123")
+                .then()
+                .spec(responseSpecs.badRequestWithErrorResponseSpec(INVALID_UUID));
+    }
+
+    @Test
     @User(username = "user")
     @ApiLogin
     @DisplayName("Verify that painting can be created with authorized user")
     void createPaintingWithUser(@Token String bearerToken) {
         PaintingJson newPainting = PaintingJson.generateRandomPaintingJson();
-        paintingClient.createPainting(newPainting, bearerToken)
+        PaintingJson createdPainting = paintingClient.createPainting(newPainting, bearerToken)
                 .then()
-                .spec(responseSpecs.okResponseSpec());
+                .spec(responseSpecs.okResponseSpec())
+                .extract().as(PaintingJson.class);
+
+        paintingClient.getPaintung(createdPainting.id())
+                .then().spec(responseSpecs.okResponseSpec());
     }
 
     @Test

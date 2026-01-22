@@ -13,6 +13,7 @@ import static qa.dboyko.rococo.model.sitedata.ArtistData.generateRandomArtist;
 import static qa.dboyko.rococo.pages.constants.TextConstants.ARTIST_ADD_MESSAGE;
 
 @WebTest
+@DisplayName("UI tests: create artist page")
 public class CreateArtistTest {
 
     @Test

@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import qa.dboyko.rococo.config.Config;
 import qa.dboyko.rococo.model.MuseumJson;
@@ -19,6 +20,10 @@ public class MuseumApi {
     private final ApiBase apiBase = new ApiBase.EmptyApiBase(
             CFG.gatewayUrl() + EndPoints.museumUrl,
             ContentType.JSON);
+
+    public Response getMuseum(@Nonnull String id) {
+        return apiBase.getCall("/{id}", "id", id);
+    }
 
     public Response createMuseum(MuseumJson museumJson, @Nullable String token) {
         return apiBase.postCall("",

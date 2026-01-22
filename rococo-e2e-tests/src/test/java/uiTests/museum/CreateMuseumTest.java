@@ -13,6 +13,7 @@ import static qa.dboyko.rococo.model.sitedata.MuseumData.generateRandomMuseum;
 import static qa.dboyko.rococo.pages.constants.TextConstants.MUSEUM_ADD_MESSAGE;
 
 @WebTest
+@DisplayName("UI tests: create museum page")
 public class CreateMuseumTest {
 
     @Test

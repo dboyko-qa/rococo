@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CountryJsonCache {
 
-    public static List<CountryJson> countryCache = new ArrayList<>();
+    private static List<CountryJson> countryCache = new ArrayList<>();
     private static GeoGrpcClient geoGrpcClient = new GeoGrpcClient();
 
     private static List<CountryJson> getCountries() {

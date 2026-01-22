@@ -16,10 +16,12 @@ import qa.dboyko.rococo.model.ArtistJson;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+import static qa.dboyko.rococo.api.constants.ApiErrorMessages.INVALID_UUID;
 import static qa.dboyko.rococo.utils.RandomDataUtils.*;
 import static qa.dboyko.rococo.utils.RandomDataUtils.generateArtistName;
 
 @RestTest
+@DisplayName("API tests: artist api")
 public class ArtistTest {
 
     @RegisterExtension
@@ -30,12 +32,26 @@ public class ArtistTest {
     private ArtistClient artistClient = new ArtistClient();
 
     @Test
+    @DisplayName("Verify error with invalid artist id")
+    void verifyGetRequestWithInvalidId() {
+        artistClient.getArtist("123")
+                .then()
+                .spec(responseSpecs.badRequestWithErrorResponseSpec(INVALID_UUID));
+    }
+
+    @Test
     @User(username = "user")
     @ApiLogin
     @DisplayName("Verify that artist can be created with authorized user")
     void createArtistWithUser(@Token String bearerToken) {
         ArtistJson newArtist = ArtistJson.generateRandomArtistJson();
-        artistClient.createArtist(newArtist, bearerToken)
+        ArtistJson createdArtist = artistClient.createArtist(newArtist, bearerToken)
+                .then()
+                .spec(responseSpecs.okResponseSpec())
+                .extract().as(ArtistJson.class);
+
+        // verify that artist created
+        artistClient.getArtist(createdArtist.id())
                 .then()
                 .spec(responseSpecs.okResponseSpec());
     }
@@ -86,7 +102,7 @@ public class ArtistTest {
     @Test
     @Artist
     @DisplayName("Verify that guest user cannot update artist")
-    void updateArtistWithGuestFailed(ArtistJson artistJson){
+    void updateArtistWithGuestFailed(@TestArtist ArtistJson artistJson){
         ArtistJson updated = artistJson.updateJson();
         artistClient.updateArtist(updated, null)
                 .then()

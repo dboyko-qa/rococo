@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.qameta.allure.internal.shadowed.jackson.annotation.JsonIgnore;
 import io.qameta.allure.internal.shadowed.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
+import qa.dboyko.rococo.model.sitedata.UserData;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserdataJson(
@@ -39,6 +40,17 @@ public record UserdataJson(
                 lastname,
                 avatar,
                 testData
+        );
+    }
+
+    @Nonnull
+    public UserData toUserData() {
+        return new UserData(
+                this.username,
+                this.firstname,
+                this.lastname,
+                "",
+                this.testData
         );
     }
 }

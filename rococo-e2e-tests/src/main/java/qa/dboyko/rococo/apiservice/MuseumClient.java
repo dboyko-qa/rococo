@@ -22,6 +22,10 @@ public class MuseumClient {
         return museumApi.updateMuseum(museumJson, token);
     }
 
+    public Response getMuseum(String id) {
+        return museumApi.getMuseum(id);
+    }
+
     public List<MuseumJson> getAllMuseums(@Nullable String token) {
         int page = 0;
         int size = 10;

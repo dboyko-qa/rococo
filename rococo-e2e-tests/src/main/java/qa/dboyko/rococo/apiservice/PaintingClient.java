@@ -22,6 +22,10 @@ public class PaintingClient {
         return paintingApi.updatePainting(paintingJson, token);
     }
 
+    public Response getPaintung(String id) {
+        return paintingApi.getPainting(id);
+    }
+
     public List<PaintingJson> getAllPaintings(@Nullable String token) {
         int page = 0;
         int size = 10;

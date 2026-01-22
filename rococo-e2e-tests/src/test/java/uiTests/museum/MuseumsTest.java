@@ -16,6 +16,7 @@ import static qa.dboyko.rococo.enums.LoggedUser.GUEST;
 import static qa.dboyko.rococo.enums.LoggedUser.USER_LOGGED_IN;
 
 @WebTest
+@DisplayName("UI tests: museums page")
 public class MuseumsTest {
 
     @Test

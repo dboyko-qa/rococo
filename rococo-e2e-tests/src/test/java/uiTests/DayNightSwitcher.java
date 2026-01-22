@@ -8,6 +8,7 @@ import qa.dboyko.rococo.pages.MainPage;
 import qa.dboyko.rococo.pages.constants.LightDarkMode;
 
 @WebTest
+@DisplayName("UI tests: light-dark mode switcher")
 public class DayNightSwitcher {
 
     @Test

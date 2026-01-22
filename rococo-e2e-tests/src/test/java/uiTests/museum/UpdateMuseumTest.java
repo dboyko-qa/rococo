@@ -18,6 +18,7 @@ import static qa.dboyko.rococo.utils.RandomDataUtils.getRandomMuseumFile;
 import static qa.dboyko.rococo.utils.RandomDataUtils.randomCity;
 
 @WebTest
+@DisplayName("UI tests: update museum page")
 public class UpdateMuseumTest {
 
     @Test

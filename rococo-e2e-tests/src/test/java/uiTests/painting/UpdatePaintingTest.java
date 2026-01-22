@@ -18,6 +18,7 @@ import static qa.dboyko.rococo.pages.constants.TextConstants.PAINTING_UPDATE_MES
 import static qa.dboyko.rococo.utils.RandomDataUtils.getRandomPaintingFile;
 
 @WebTest
+@DisplayName("UI tests: update painting page")
 public class UpdatePaintingTest {
 
     @Test
@@ -30,8 +31,8 @@ public class UpdatePaintingTest {
                 paintingJson.title() + "1",
                 paintingJson.description() + "1",
                 getRandomPaintingFile().toString(),
-                new ArtistGrpcClient().getRandomArtist().name(),
-                new MuseumGrpcClient().getRandomMuseum().title()
+                new MuseumGrpcClient().getRandomMuseum().title(),
+                new ArtistGrpcClient().getRandomArtist().name()
         );
         new MainPage().openPaintings()
                 .openPainting(paintingJson.title())

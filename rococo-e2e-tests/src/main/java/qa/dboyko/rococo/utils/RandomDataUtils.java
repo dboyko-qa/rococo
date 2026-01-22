@@ -85,9 +85,22 @@ public class RandomDataUtils {
     public static File getRandomPaintingFile() {
         return getRandomImageFileFromResouces("paintings");
     }
+    public static File getRandomUserFile() {
+        return getRandomImageFileFromResouces("avatars");
+    }
 
     @Nullable
     public static String generateRandomString(int length) {
         return faker.lorem().characters(length);
+    }
+
+    @Nonnull
+    public static String getRandomFirstname() {
+        return faker.name().firstName();
+    }
+
+    @Nonnull
+    public static String getrandomLastname() {
+        return faker.name().lastName();
     }
 }

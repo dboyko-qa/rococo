@@ -4,6 +4,9 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.specification.ResponseSpecification;
 import org.apache.http.HttpStatus;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
+
 public class ResponseSpecifications {
 
     public ResponseSpecification createResponseSpec() {
@@ -21,6 +24,13 @@ public class ResponseSpecifications {
     public ResponseSpecification badRequestResponseSpec() {
         return new ResponseSpecBuilder()
                 .expectStatusCode(HttpStatus.SC_BAD_REQUEST)
+                .build();
+    }
+
+    public ResponseSpecification badRequestWithErrorResponseSpec(String errorText) {
+        return new ResponseSpecBuilder()
+                .expectStatusCode(HttpStatus.SC_BAD_REQUEST)
+                .expectBody("errors", hasItem(containsString(errorText)))
                 .build();
     }
 
