@@ -17,9 +17,11 @@ import qa.dboyko.rococo.model.MuseumJson;
 
 import java.util.stream.Stream;
 
+import static qa.dboyko.rococo.api.constants.ApiErrorMessages.INVALID_UUID;
 import static qa.dboyko.rococo.utils.RandomDataUtils.*;
 
 @RestTest
+@DisplayName("API tests: museum api")
 public class MuseumTest {
 
     @RegisterExtension
@@ -30,14 +32,26 @@ public class MuseumTest {
     private MuseumClient museumClient = new MuseumClient();
 
     @Test
+    @DisplayName("Verify error with invalid museum id")
+    void verifyGetRequestWithInvalidId() {
+        museumClient.getMuseum("123")
+                .then()
+                .spec(responseSpecs.badRequestWithErrorResponseSpec(INVALID_UUID));
+    }
+
+    @Test
     @User(username = "user")
     @ApiLogin
     @DisplayName("Verify that museum can be created with authorized user")
     void createMuseumWithUser(@Token String bearerToken) {
         MuseumJson newMuseum = MuseumJson.generateRandomMuseumJson();
-        museumClient.createMuseum(newMuseum, bearerToken)
+        MuseumJson createdMuseum = museumClient.createMuseum(newMuseum, bearerToken)
                 .then()
-                .spec(responseSpecs.okResponseSpec());
+                .spec(responseSpecs.okResponseSpec())
+                .extract().as(MuseumJson.class);
+
+        museumClient.getMuseum(createdMuseum.id())
+                .then().spec(responseSpecs.okResponseSpec());
     }
 
     @Test

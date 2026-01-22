@@ -14,12 +14,13 @@ import static qa.dboyko.rococo.enums.LoggedUser.GUEST;
 import static qa.dboyko.rococo.enums.LoggedUser.USER_LOGGED_IN;
 
 @WebTest
+@DisplayName("UI tests: artists page")
 public class ArtistTest {
 
     @Test
     @DisplayName("Verify page for guest")
     void verifyArtistsPageForGuest() {
-        Selenide.open(MuseumsPage.url, ArtistsPage.class)
+        Selenide.open(ArtistsPage.url, ArtistsPage.class)
                 .verifyAddButtonVisibility(GUEST)
                 .verifyMainContent();
     }

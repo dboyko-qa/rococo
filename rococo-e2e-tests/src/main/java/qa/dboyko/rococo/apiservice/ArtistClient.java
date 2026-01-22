@@ -18,8 +18,13 @@ public class ArtistClient {
         return artistApi.createArtist(artistJson, token);
     }
 
+
     public Response updateArtist(ArtistJson artistJson, @Nullable String token) {
         return artistApi.updateArtist(artistJson, token);
+    }
+
+    public Response getArtist(String id) {
+        return artistApi.getArtist(id);
     }
 
     public List<ArtistJson> getAllArtists(@Nullable String token) {

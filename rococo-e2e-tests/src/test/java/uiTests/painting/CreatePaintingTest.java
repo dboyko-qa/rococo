@@ -17,7 +17,7 @@ import static qa.dboyko.rococo.pages.constants.TextConstants.PAINTING_ADD_MESSAG
 import static qa.dboyko.rococo.pages.constants.TextConstants.PAINTING_FOR_ARTIST_ADD_MESSAGE;
 
 @WebTest
-@DisplayName("UI tests: paintings dialog")
+@DisplayName("UI tests: create painting dialog")
 public class CreatePaintingTest {
 
     @Test

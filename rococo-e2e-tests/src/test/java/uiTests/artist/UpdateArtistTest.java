@@ -16,6 +16,7 @@ import static qa.dboyko.rococo.pages.constants.TextConstants.ARTIST_UPDATE_MESSA
 import static qa.dboyko.rococo.utils.RandomDataUtils.*;
 
 @WebTest
+@DisplayName("UI tests: update artist page")
 public class UpdateArtistTest {
 
     @Test

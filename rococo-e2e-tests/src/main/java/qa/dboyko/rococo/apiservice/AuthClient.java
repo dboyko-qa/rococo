@@ -29,9 +29,7 @@ public class AuthClient {
                 codeChallenge,
                 "S256"
         );
-//        String jsession = response.getCookie("JSESSIONID");
-//        response.then().log().all();
-//
+
         authApi.loginGet().then().log().all();
 
         authApi.login(

@@ -9,6 +9,7 @@ import qa.dboyko.rococo.extensions.annotations.meta.WebTest;
 import qa.dboyko.rococo.pages.MainPage;
 
 @WebTest
+@DisplayName("UI tests: main page")
 public class MainPageTest {
 
     @Test
@@ -24,7 +25,7 @@ public class MainPageTest {
     @ApiLogin
     @DisplayName("Verify Main page content for logged user")
     void verifyMainPageUserLogged() {
-        Selenide.open(MainPage.url, MainPage.class)
+        new MainPage()
                 .getMainMenu().verifyAvatarForNewUser().verifyAllButtonsAvailable();
         new MainPage().verifyContent();
     }

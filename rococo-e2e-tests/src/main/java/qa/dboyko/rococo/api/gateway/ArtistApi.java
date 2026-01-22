@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import qa.dboyko.rococo.config.Config;
 import qa.dboyko.rococo.model.ArtistJson;
@@ -24,6 +25,10 @@ public class ArtistApi {
         return apiBase.postCall("",
                 new Headers(new Header("Authorization", token)),
                 artistJson);
+    }
+
+    public Response getArtist(@Nonnull String id) {
+        return apiBase.getCall("/{id}", "id", id);
     }
 
     public Response updateArtist(ArtistJson artistJson, @Nullable String token) {

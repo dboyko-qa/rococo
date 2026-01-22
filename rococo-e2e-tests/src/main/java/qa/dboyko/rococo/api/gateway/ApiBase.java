@@ -119,6 +119,15 @@ public abstract class ApiBase {
     }
 
     protected Response getCall(String url,
+                               String pathParamName,
+                               String pathParamValue) {
+        return RestAssured.given()
+                .spec(getRequestSpec())
+                .pathParam(pathParamName, pathParamValue)
+                .get(url);
+    }
+
+    protected Response getCall(String url,
                                Cookies cookies) {
         return RestAssured.given()
                 .spec(getRequestSpec())
